@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IVORY TECH SOLUTIONS — AI-Powered Digital Marketing & Design Studio</title>
+  <meta name="description" content="Ivory Tech Solutions is a full-service AI-powered digital marketing agency crafting premium brand experiences with 99% accuracy through SEO, social media, content strategy, paid advertising, web design and more.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <!-- Swiper.js CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ═══ CLICK TO ENTER SPLASH (required for audio autoplay) ═══ -->
+  <div class="enter-splash" id="enter-splash">
+    <canvas id="enter-particles"></canvas>
+    <div class="enter-content">
+      <div class="enter-brand">IVORY TECH</div>
+      <div class="enter-brand-sub">SOLUTIONS</div>
+      <button class="enter-btn" id="enter-btn">
+        <span class="enter-btn-text">Enter Experience</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
+      </button>
+      <p class="enter-hint">🔊 Best experienced with sound</p>
+    </div>
+  </div>
+
+  <!-- ═══ CINEMATIC PAGE LOADER (8 seconds) ═══ -->
+
+  <div class="page-loader" id="page-loader">
+    <canvas id="loader-particles-canvas"></canvas>
+    <div class="loader-content">
+      <div class="loader-logo">
+        <div class="loader-name">IVORY TECH</div>
+        <div class="loader-name-sub">SOLUTIONS</div>
+      </div>
+      <div class="loader-tagline" id="loader-tagline">AI-Powered Digital Excellence</div>
+      <div class="loader-progress-container">
+        <div class="loader-progress-bar" id="loader-progress-bar"></div>
+      </div>
+      <div class="loader-percentage" id="loader-percentage">0%</div>
+      <div class="loader-ai-badge">
+        <div class="ai-pulse-ring"></div>
+        <span>⚡ 99% AI ACCURACY</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ LEAD CATCHER POPUP ═══ -->
+  <div class="lead-popup-overlay" id="lead-popup-overlay">
+    <div class="lead-popup" id="lead-popup">
+      <button class="lead-popup-close" id="lead-popup-close">&times;</button>
+      <div class="lead-popup-glow"></div>
+      <div class="lead-popup-badge">
+        <div class="popup-ai-ring"></div>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="m2 17 10 5 10-5"/><path d="m2 12 10 5 10-5"/></svg>
+        <span>AI-DRIVEN RESULTS · 99% ACCURACY</span>
+      </div>
+      <h2 class="lead-popup-title">Get Your Free<br><span>AI-Powered Audit</span></h2>
+      <p class="lead-popup-desc">Discover untapped growth opportunities with our AI engine. We analyze your digital presence and deliver actionable insights.</p>
+      <form class="lead-popup-form" id="lead-popup-form">
+        <input type="text" id="popup-name" placeholder="Your Name" required>
+        <input type="email" id="popup-email" placeholder="Email Address" required>
+        <button type="submit" class="lead-popup-btn">
+          <span>Claim Free Audit</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ═══ CLICK/TAP RIPPLE CANVAS ═══ -->
+  <canvas id="click-ripple-canvas"></canvas>
+
+  <!-- ═══ SOUND TOGGLE BUTTON ═══ -->
+  <button class="sound-toggle" id="sound-toggle" aria-label="Toggle music" title="Toggle music">
+    <!-- Muted icon (shown when audio is off / not yet started) -->
+    <svg class="sound-icon sound-off" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/>
+    </svg>
+    <!-- Playing icon (shown when audio is playing) -->
+    <svg class="sound-icon sound-on" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+    </svg>
+  </button>
+
+  <!-- Custom Cursor -->
+  <div class="cursor-follower" id="cursor-follower"></div>
+  <div class="cursor-dot" id="cursor-dot"></div>
+
+  <!-- ═══ NAVIGATION ═══ -->
+  <nav class="navbar nav-hidden" id="navbar">
+    <div class="logo" data-magnetic>IVORY TECH</div>
+    <div class="nav-links">
+      <a href="#services" data-magnetic>Services</a>
+      <a href="#work" data-magnetic>Work</a>
+      <a href="#websites" data-magnetic>Websites</a>
+      <a href="student.html" data-magnetic>Student Success</a>
+      <a href="#about" data-magnetic>About</a>
+      <a href="#contact" class="nav-cta" data-magnetic>Get in Touch</a>
+    </div>
+    <button class="menu-toggle" id="menu-toggle" aria-label="Toggle menu">
+      <span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- Mobile Nav Overlay -->
+  <div class="mobile-nav" id="mobile-nav">
+    <a href="#services" class="mobile-nav-link">Services</a>
+    <a href="#work" class="mobile-nav-link">Work</a>
+    <a href="#websites" class="mobile-nav-link">Websites</a>
+    <a href="student.html" class="mobile-nav-link" onclick="document.body.style.overflow=''">Student Success</a>
+    <a href="#about" class="mobile-nav-link">About</a>
+    <a href="#contact" class="mobile-nav-link">Get in Touch</a>
+  </div>
+
+  <!-- Floating Cart Icon -->
+  <div class="cart-float" id="cart-float">
+    <button class="cart-float-btn" id="cart-toggle" aria-label="View Requirements">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      <span class="cart-badge" id="cart-badge">0</span>
+    </button>
+  </div>
+
+  <!-- Cart Drawer -->
+  <div class="cart-drawer-overlay" id="cart-overlay"></div>
+  <div class="cart-drawer" id="cart-drawer">
+    <div class="cart-drawer-header">
+      <h3>Your Requirements</h3>
+      <button class="cart-drawer-close" id="cart-close">&times;</button>
+    </div>
+    <div class="cart-drawer-body" id="cart-body">
+      <p class="cart-empty" id="cart-empty">No services selected yet. Browse our services and add what you need.</p>
+    </div>
+    <div class="cart-drawer-footer">
+      <div class="cart-total" id="cart-total">
+        <span>Selected Services:</span>
+        <strong id="cart-count">0</strong>
+      </div>
+      <button class="cart-checkout-btn" id="cart-checkout">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+        Send via WhatsApp
+      </button>
+    </div>
+  </div>
+
+  <!-- HERO BACKGROUND EFFECTS -->
+  <div class="interactive-bg">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+  <canvas id="hero-particles"></canvas>
+  <canvas id="universe-canvas"></canvas>
+
+  <!-- ═══ AMBIENT BACKGROUND VIDEO ═══ -->
+  <video class="hero-ambient-video" id="hero-ambient-video" autoplay muted loop playsinline>
+    <source src="https://cdn.coverr.co/videos/coverr-abstract-dark-particles-6089/1080p.mp4" type="video/mp4">
+  </video>
+
+  <main>
+
+    <!-- ═══ HERO ═══ -->
+    <section class="hero" id="hero">
+      <div class="hero-heading-wrapper">
+        <h1 class="hero-heading" id="hero-heading">
+          <span class="hero-line hero-line-1">
+            <span class="char-wrap" data-text="WE CREATE"></span>
+          </span>
+          <span class="hero-line hero-line-2">
+            <span class="typing-container">
+              <span class="typing-text" id="typing-text"></span>
+              <span class="typing-cursor">|</span>
+            </span>
+          </span>
+        </h1>
+      </div>
+      <!-- Brand Logo Video from GDrive (User Interactive) -->
+      <div class="hero-video-container">
+        <iframe src="https://drive.google.com/file/d/15F_YXkB0LPQDtbGL52U_Fy-nhOj9x34K/preview" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+      </div>
+      <div class="hero-subtext-container">
+        <div class="hero-ai-badge">
+          <div class="ai-accuracy-ring">
+            <svg viewBox="0 0 120 120">
+              <circle cx="60" cy="60" r="54" stroke="rgba(255,255,255,0.1)" stroke-width="2" fill="none"/>
+              <circle class="ai-ring-progress" cx="60" cy="60" r="54" stroke="url(#aiGrad)" stroke-width="2" fill="none" stroke-dasharray="339.292" stroke-dashoffset="339.292" stroke-linecap="round"/>
+              <defs><linearGradient id="aiGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#fff"/><stop offset="100%" stop-color="#888"/></linearGradient></defs>
+            </svg>
+            <div class="ai-ring-text">
+              <span class="ai-ring-number" data-target="99">0</span>
+              <span class="ai-ring-pct">%</span>
+            </div>
+          </div>
+          <div class="ai-badge-info">
+            <span class="ai-badge-label">AI-DRIVEN ACCURACY</span>
+            <span class="ai-badge-desc">Powered by machine learning & predictive analytics</span>
+          </div>
+        </div>
+        <p class="hero-subtext">WE ARE A FULL-SERVICE AI-POWERED DIGITAL MARKETING AGENCY DEDICATED TO CRAFTING PREMIUM BRAND EXPERIENCES. BOLD STRATEGY, HIGH IMPACT, FLAWLESS EXECUTION.</p>
+        <a href="#services" class="hero-cta" data-magnetic>
+          <span>Explore Services</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17l9.2-9.2M17 17V7.8H7.8"/></svg>
+        </a>
+      </div>
+      <div class="scroll-indicator" id="scroll-indicator">
+        <span class="scroll-text">Scroll</span>
+        <div class="scroll-line"></div>
+      </div>
+    </section>
+
+    <!-- ═══ MARQUEE ═══ -->
+    <div class="marquee-container">
+      <div class="marquee-content" id="marquee-track">
+        <span>SEO _ SOCIAL MEDIA _ CONTENT _ PPC _ EMAIL _ WEB DESIGN _ BRANDING _ ANALYTICS _ VIDEO _ AI MARKETING _ </span>
+        <span>SEO _ SOCIAL MEDIA _ CONTENT _ PPC _ EMAIL _ WEB DESIGN _ BRANDING _ ANALYTICS _ VIDEO _ AI MARKETING _ </span>
+      </div>
+    </div>
+
+    <!-- ═══ STATS BAR ═══ -->
+    <section class="stats-bar" id="stats">
+      <div class="stat-item">
+        <div class="stat-wrap">
+          <span class="stat-number" data-target="150">0</span><span class="stat-suffix">+</span>
+        </div>
+        <span class="stat-label">Projects Delivered</span>
+      </div>
+      <div class="stat-item">
+        <div class="stat-wrap">
+          <span class="stat-number" data-target="12">0</span><span class="stat-suffix">M+</span>
+        </div>
+        <span class="stat-label">Ad Spend Managed</span>
+      </div>
+      <div class="stat-item">
+        <div class="stat-wrap">
+          <span class="stat-number" data-target="340">0</span><span class="stat-suffix">%</span>
+        </div>
+        <span class="stat-label">Avg. ROI Increase</span>
+      </div>
+      <div class="stat-item">
+        <div class="stat-wrap">
+          <span class="stat-number" data-target="99">0</span><span class="stat-suffix">%</span>
+        </div>
+        <span class="stat-label">AI Accuracy Rate</span>
+      </div>
+    </section>
+
+    <!-- ═══ SERVICES ═══ -->
+    <section class="services" id="services">
+      <div class="section-header" data-reveal>
+        <span class="section-tag" data-reveal-tag>What We Do</span>
+        <h2 class="section-title" data-reveal-title>Full-Spectrum Digital<br>Marketing Services</h2>
+        <p class="section-sub" data-reveal-fade>We engineer growth across every digital channel — from first impression to lasting loyalty.</p>
+      </div>
+
+      <div class="services-grid">
+
+        <article class="service-card" id="svc-seo" data-tilt>
+          <div class="service-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          </div>
+          <h3 class="service-title">Search Engine Optimization</h3>
+          <p class="service-desc">Dominate organic search with technical SEO audits, keyword strategy, on-page optimization, link building, and local SEO that drives qualified traffic.</p>
+          <ul class="service-tags">
+            <li>Technical SEO</li><li>Keyword Research</li><li>Link Building</li><li>Local SEO</li>
+          </ul>
+          <button class="add-to-cart-btn" data-service="Search Engine Optimization" data-id="seo">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+            Add to Requirements
+          </button>
+        </article>
+
+        <article class="service-card" id="svc-social" data-tilt>
+          <div class="service-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          </div>
+          <h3 class="service-title">Social Media Marketing</h3>
+          <p class="service-desc">Build engaged communities and drive conversions across Instagram, LinkedIn, TikTok, X, and Facebook with data-driven content and targeted campaigns.</p>
+          <ul class="service-tags">
+            <li>Content Strategy</li><li>Community Mgmt</li><li>Paid Social</li><li>Influencer</li>
+          </ul>
+          <button class="add-to-cart-btn" data-service="Social Media Marketing" data-id="social">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+            Add to Requirements
+          </button>
+        </article>
+
+        <article class="service-card" id="svc-content" data-tilt>
+          <div class="service-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
+          </div>
+          <h3 class="service-title">Content Marketing</h3>
+          <p class="service-desc">Compelling blogs, whitepapers, case studies, and thought leadership that educate your audience, build authority, and fuel your SEO engine.</p>
+          <ul class="service-tags">
+            <li>Blog Writing</li><li>Copywriting</li><li>Whitepapers</li><li>Editorial</li>
+          </ul>
+          <button class="add-to-cart-btn" data-service="Content Marketing" data-id="content">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+            Add to Requirements
+          </button>
+        </article>
+
+        <article class="service-card" id="svc-ppc" data-tilt>
+          <div class="service-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 3l-4 4-4-4"/></svg>
+          </div>
+          <h3 class="service-title">Pay-Per-Click Advertising</h3>
+          <p class="service-desc">Maximize ROAS with precision-targeted Google Ads, Shopping campaigns, display networks, and retargeting strategies built for scale.</p>
+          <ul class="service-tags">
+            <li>Google Ads</li><li>Shopping</li><li>Display</li><li>Retargeting</li>
+          </ul>
+          <button class="add-to-cart-btn" data-service="Pay-Per-Click Advertising" data-id="ppc">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+            Add to Requirements
+          </button>
+        </article>
+
+        <article class="service-card" id="svc-email" data-tilt>
+          <div class="service-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+          </div>
+          <h3 class="service-title">Email Marketing</h3>
+          <p class="service-desc">Nurture leads and drive repeat revenue with automated drip sequences, personalized campaigns, A/B testing, and lifecycle marketing.</p>
+          <ul class="service-tags">
+            <li>Automation</li><li>Drip Campaigns</li><li>A/B Testing</li><li>Newsletters</li>
+          </ul>
+          <button class="add-to-cart-btn" data-service="Email Marketing" data-id="email">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+            Add to Requirements
+          </button>
+        </article>
+
+        <article class="service-card" id="svc-web" data-tilt>
+          <div class="service-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>
+          </div>
+          <h3 class="service-title">Web Design & Development</h3>
+          <p class="service-desc">Lightning-fast, conversion-optimized websites and landing pages crafted with stunning design, seamless UX, and bulletproof performance.</p>
+          <ul class="service-tags">
+            <li>UI/UX Design</li><li>Landing Pages</li><li>E-commerce</li><li>CMS</li>
+          </ul>
+          <button class="add-to-cart-btn" data-service="Web Design & Development" data-id="web">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+            Add to Requirements
+          </button>
+        </article>
+
+        <article class="service-card" id="svc-brand" data-tilt>
+          <div class="service-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="m2 17 10 5 10-5"/><path d="m2 12 10 5 10-5"/></svg>
+          </div>
+          <h3 class="service-title">Branding & Identity</h3>
+          <p class="service-desc">Iconic brand identities from logo design and visual systems to brand guidelines, messaging frameworks, and positioning strategy.</p>
+          <ul class="service-tags">
+            <li>Logo Design</li><li>Brand Guidelines</li><li>Messaging</li><li>Positioning</li>
+          </ul>
+          <button class="add-to-cart-btn" data-service="Branding & Identity" data-id="brand">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+            Add to Requirements
+          </button>
+        </article>
+
+        <article class="service-card" id="svc-analytics" data-tilt>
+          <div class="service-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+          </div>
+          <h3 class="service-title">Analytics & Reporting</h3>
+          <p class="service-desc">Data-driven decisions with custom dashboards, GA4 implementation, conversion tracking, attribution modeling, and monthly performance reviews.</p>
+          <ul class="service-tags">
+            <li>GA4 Setup</li><li>Dashboards</li><li>Attribution</li><li>CRO</li>
+          </ul>
+          <button class="add-to-cart-btn" data-service="Analytics & Reporting" data-id="analytics">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+            Add to Requirements
+          </button>
+        </article>
+
+        <article class="service-card" id="svc-video" data-tilt>
+          <div class="service-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          </div>
+          <h3 class="service-title">Video Production</h3>
+          <p class="service-desc">Scroll-stopping video content — from brand films, product demos, and social reels to YouTube strategy and motion graphics.</p>
+          <ul class="service-tags">
+            <li>Brand Film</li><li>Social Reels</li><li>Motion Graphics</li><li>YouTube</li>
+          </ul>
+          <button class="add-to-cart-btn" data-service="Video Production" data-id="video">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+            Add to Requirements
+          </button>
+        </article>
+
+        <article class="service-card" id="svc-influence" data-tilt>
+          <div class="service-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <h3 class="service-title">Influencer Marketing</h3>
+          <p class="service-desc">Strategic partnerships with creators and micro-influencers that amplify brand reach, build trust, and deliver measurable engagement.</p>
+          <ul class="service-tags">
+            <li>Creator Outreach</li><li>Campaigns</li><li>UGC</li><li>Partnerships</li>
+          </ul>
+          <button class="add-to-cart-btn" data-service="Influencer Marketing" data-id="influencer">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+            Add to Requirements
+          </button>
+        </article>
+
+      </div>
+    </section>
+
+
+    <!-- ═══ PROCESS / HOW WE WORK (Enhanced Timeline) ═══ -->
+    <section class="process" id="process">
+      <div class="section-header" data-reveal>
+        <span class="section-tag" data-reveal-tag>How We Work</span>
+        <h2 class="section-title" data-reveal-title>A Proven Process,<br>Built for Results</h2>
+      </div>
+      <div class="process-timeline">
+        <div class="timeline-line"><div class="timeline-line-fill" id="timeline-line-fill"></div></div>
+        <div class="process-step-enhanced" data-step="1">
+          <div class="step-marker">
+            <div class="step-glow-ring"></div>
+            <span class="step-number-enhanced">01</span>
+          </div>
+          <div class="step-content-enhanced">
+            <div class="step-icon-float">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            </div>
+            <h3 class="step-title-enhanced">Discovery & Audit</h3>
+            <p class="step-desc-enhanced">We deep-dive into your brand, competitors, and audience. Comprehensive audits across SEO, ads, social, and analytics reveal untapped opportunities.</p>
+            <div class="step-tags-enhanced">
+              <span>Brand Analysis</span><span>Competitor Research</span><span>Gap Identification</span>
+            </div>
+          </div>
+        </div>
+        <div class="process-step-enhanced" data-step="2">
+          <div class="step-marker">
+            <div class="step-glow-ring"></div>
+            <span class="step-number-enhanced">02</span>
+          </div>
+          <div class="step-content-enhanced">
+            <div class="step-icon-float">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
+            </div>
+            <h3 class="step-title-enhanced">Strategy & Roadmap</h3>
+            <p class="step-desc-enhanced">Custom growth strategy with clear KPIs, channel priorities, content calendars, and budget allocation — designed to hit your goals fast.</p>
+            <div class="step-tags-enhanced">
+              <span>KPI Framework</span><span>Budget Planning</span><span>Content Calendar</span>
+            </div>
+          </div>
+        </div>
+        <div class="process-step-enhanced" data-step="3">
+          <div class="step-marker">
+            <div class="step-glow-ring"></div>
+            <span class="step-number-enhanced">03</span>
+          </div>
+          <div class="step-content-enhanced">
+            <div class="step-icon-float">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            </div>
+            <h3 class="step-title-enhanced">Execute & Create</h3>
+            <p class="step-desc-enhanced">Our specialists launch campaigns, build assets, write content, and optimize in real-time. Every deliverable is polished to perfection.</p>
+            <div class="step-tags-enhanced">
+              <span>Campaign Launch</span><span>Asset Creation</span><span>Real-time Ops</span>
+            </div>
+          </div>
+        </div>
+        <div class="process-step-enhanced" data-step="4">
+          <div class="step-marker">
+            <div class="step-glow-ring"></div>
+            <span class="step-number-enhanced">04</span>
+          </div>
+          <div class="step-content-enhanced">
+            <div class="step-icon-float">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+            </div>
+            <h3 class="step-title-enhanced">Measure & Scale</h3>
+            <p class="step-desc-enhanced">Transparent reporting with actionable insights. We A/B test relentlessly, double down on winners, and scale what works.</p>
+            <div class="step-tags-enhanced">
+              <span>A/B Testing</span><span>Performance Reports</span><span>Scale Winners</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ PORTFOLIO / WORK (Client Portfolio) ═══ -->
+    <section class="portfolio" id="work">
+      <div class="section-header" data-reveal>
+        <span class="section-tag" data-reveal-tag>Selected Work</span>
+        <h2 class="section-title" data-reveal-title>Client Portfolio</h2>
+      </div>
+      <!-- Swiper 3D Carousel Container - Rendered dynamically from JS -->
+      <div class="swiper portfolio-swiper">
+        <div class="swiper-wrapper" id="portfolio-swiper-wrapper">
+          <!-- Slides injected by JS from localStorage -->
+        </div>
+        
+        <!-- Swiper Pagination -->
+        <div class="swiper-pagination"></div>
+        <!-- Swiper Navigation -->
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+      </div>
+    </section>
+
+    <!-- ═══ WEBSITE DEVELOPMENT SHOWCASE ═══ -->
+    <section class="websites-showcase" id="websites">
+      <div class="section-header" data-reveal>
+        <span class="section-tag" data-reveal-tag>Website Development</span>
+        <h2 class="section-title" data-reveal-title>Websites We've<br>Brought to Life</h2>
+        <p class="section-sub" data-reveal-fade>Explore our collection of stunning, high-performance websites crafted for brands that demand excellence.</p>
+      </div>
+      <div class="websites-grid" id="websites-grid">
+        <!-- Rendered dynamically from localStorage by JS -->
+      </div>
+    </section>
+
+    <!-- ═══ TESTIMONIALS ═══ -->
+    <section class="testimonials" id="testimonials">
+      <div class="section-header" data-reveal>
+        <span class="section-tag" data-reveal-tag>Client Love</span>
+        <h2 class="section-title" data-reveal-title>What They Say</h2>
+      </div>
+      <div class="testimonials-grid">
+        <blockquote class="testimonial-card">
+          <p class="testimonial-text">"They transformed our entire digital presence. Organic traffic is up 420% and our cost-per-lead dropped by half within six months."</p>
+          <footer class="testimonial-author">
+            <img src="https://i.pravatar.cc/80?img=32" alt="Sarah Chen" class="testimonial-avatar" width="48" height="48" loading="lazy">
+            <div>
+              <cite class="testimonial-name">Sarah Chen</cite>
+              <span class="testimonial-role">CMO, Vertex SaaS</span>
+            </div>
+          </footer>
+        </blockquote>
+        <blockquote class="testimonial-card">
+          <p class="testimonial-text">"Their branding work gave us the premium identity we needed. The website they built converts at 3x our old rate. Absolutely world-class."</p>
+          <footer class="testimonial-author">
+            <img src="https://i.pravatar.cc/80?img=11" alt="Marcus Rivera" class="testimonial-avatar" width="48" height="48" loading="lazy">
+            <div>
+              <cite class="testimonial-name">Marcus Rivera</cite>
+              <span class="testimonial-role">Founder, Noir Cosmetics</span>
+            </div>
+          </footer>
+        </blockquote>
+        <blockquote class="testimonial-card">
+          <p class="testimonial-text">"Best agency we've worked with — ever. They manage our Google Ads, SEO, and socials. The reporting alone is worth the investment."</p>
+          <footer class="testimonial-author">
+            <img src="https://i.pravatar.cc/80?img=47" alt="Elena Volkov" class="testimonial-avatar" width="48" height="48" loading="lazy">
+            <div>
+              <cite class="testimonial-name">Elena Volkov</cite>
+              <span class="testimonial-role">VP Marketing, Urban Arch</span>
+            </div>
+          </footer>
+        </blockquote>
+      </div>
+    </section>
+
+    <!-- ═══ ABOUT ═══ -->
+    <section class="about-section" id="about">
+      <div class="section-header" data-reveal>
+        <span class="section-tag" data-reveal-tag>Who We Are</span>
+        <h2 class="section-title" data-reveal-title>A Studio Built for<br>the Digital Age</h2>
+        <p class="section-sub" data-reveal-fade>We are a team of strategists, designers, engineers, and storytellers — obsessed with one thing: making brands impossible to ignore.</p>
+      </div>
+      <div class="about-grid">
+        <div class="about-stat-col">
+          <div class="about-big-stat">
+            <span class="about-big-num" data-target="5">0</span><span class="about-big-suffix">+</span>
+            <span class="about-big-label">Years in Business</span>
+          </div>
+          <div class="about-big-stat">
+            <span class="about-big-num" data-target="150">0</span><span class="about-big-suffix">+</span>
+            <span class="about-big-label">Brands Elevated</span>
+          </div>
+          <div class="about-big-stat">
+            <span class="about-big-num" data-target="18">0</span><span class="about-big-suffix">+</span>
+            <span class="about-big-label">Team Specialists</span>
+          </div>
+        </div>
+        <div class="about-values-col">
+          <div class="about-value-card">
+            <div class="about-value-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="m2 17 10 5 10-5"/><path d="m2 12 10 5 10-5"/></svg>
+            </div>
+            <div>
+              <h4 class="about-value-title">AI-First Thinking</h4>
+              <p class="about-value-desc">Every strategy we build is powered by machine learning, predictive analytics, and data-driven insight — not guesswork.</p>
+            </div>
+          </div>
+          <div class="about-value-card">
+            <div class="about-value-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+            </div>
+            <div>
+              <h4 class="about-value-title">Speed & Precision</h4>
+              <p class="about-value-desc">We move fast without cutting corners. Every deliverable is quality-checked, on-brand, and on-time. Always.</p>
+            </div>
+          </div>
+          <div class="about-value-card">
+            <div class="about-value-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <div>
+              <h4 class="about-value-title">Partnership Mindset</h4>
+              <p class="about-value-desc">We embed ourselves as a true extension of your team — transparent, proactive, and fully invested in your growth.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Meet Our Founders -->
+      <div class="founders-container" data-reveal>
+        <div class="section-header founders-header">
+          <span class="section-tag" data-reveal-tag>Leadership</span>
+          <h2 class="section-title" data-reveal-title>Meet Our Founders</h2>
+        </div>
+        
+        <div class="founders-grid">
+          <!-- Founder 1 -->
+          <div class="founder-card" data-tilt>
+            <div class="founder-image-wrapper">
+              <img src="images/pranav.jpg" alt="Pranav Gugale" class="founder-image" loading="lazy">
+              <div class="founder-glow"></div>
+            </div>
+            <div class="founder-info">
+              <h3 class="founder-name">Pranav Gugale</h3>
+              <span class="founder-role">CEO</span>
+              <p class="founder-bio">As the visionary leader behind the company, Pranav combines a deep-seated understanding of business heritage with modern digital innovation. His approach is rooted in the belief that effective marketing isn't just about visibility—it's about sustainable growth and building a legacy.</p>
+              <div class="founder-socials">
+                <a href="#" id="pranav-fb" class="social-link" target="_blank" aria-label="Facebook">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+                </a>
+                <a href="#" id="pranav-insta" class="social-link" target="_blank" aria-label="Instagram">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                </a>
+                <a href="#" id="pranav-linkedin" class="social-link" target="_blank" aria-label="LinkedIn">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Founder 2 -->
+          <div class="founder-card" data-tilt>
+            <div class="founder-image-wrapper">
+              <img src="images/pratik.jpg" alt="Pratik Katariya" class="founder-image" loading="lazy">
+              <div class="founder-glow"></div>
+            </div>
+            <div class="founder-info">
+              <h3 class="founder-name">Pratik Katariya</h3>
+              <span class="founder-role">CFO</span>
+              <p class="founder-bio">With a sharp eye for strategy and financial precision, Pratik ensures that every marketing initiative is backed by solid data and a clear ROI. His background in core business operations allows him to look beyond the surface, focusing on the fundamental mechanics that make a brand successful.</p>
+              <div class="founder-socials">
+                <a href="#" id="pratik-fb" class="social-link" target="_blank" aria-label="Facebook">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+                </a>
+                <a href="#" id="pratik-insta" class="social-link" target="_blank" aria-label="Instagram">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                </a>
+                <a href="#" id="pratik-linkedin" class="social-link" target="_blank" aria-label="LinkedIn">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Why Choose Our Leadership? -->
+        <div class="leadership-philosophy">
+          <h3 class="philosophy-title" data-reveal-title>Why Choose Our Leadership?</h3>
+          <p class="philosophy-intro" data-reveal-fade>Both Pranav and Pratik bring a unique advantage to the table: a core business family background. This upbringing has instilled in them an "entrepreneur-first" mindset that sets our agency apart.</p>
+          
+          <div class="philosophy-points">
+            <div class="philosophy-point">
+              <div class="point-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="m2 17 10 5 10-5"/><path d="m2 12 10 5 10-5"/></svg></div>
+              <div>
+                <h4>Deep-Rooted Expertise</h4>
+                <p>They don't just understand marketing theory; they understand the pulse of commerce, supply chains, and consumer psychology passed down through generations of business experience.</p>
+              </div>
+            </div>
+            <div class="philosophy-point">
+              <div class="point-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></div>
+              <div>
+                <h4>Bridging the Gap</h4>
+                <p>They specialize in taking traditional business values and translating them into the digital age, ensuring that "old-school" reliability meets "new-school" technology.</p>
+              </div>
+            </div>
+            <div class="philosophy-point">
+              <div class="point-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+              <div>
+                <h4>A Commitment to Growth</h4>
+                <p>Whether training the next generation of students or helping a local business scale, their goal remains the same: creating impactful digital footprints that lead to real-world results.</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="philosophy-footer" data-reveal-fade>
+            <p>Together, they lead a team dedicated to excellence, innovation, and the success of every partner we work with.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ CTA / CONTACT (Ready to Glow — Enhanced) ═══ -->
+    <section class="contact-cta" id="contact">
+      <div class="cta-glow-border"></div>
+      <div class="cta-inner">
+        <div class="cta-particle-bg"></div>
+        <h2 class="cta-heading" data-reveal-title>Ready to Glow?</h2>
+        <p class="cta-sub" data-reveal-fade>Let's build an AI-powered digital marketing engine that drives real revenue. Book a free strategy call today.</p>
+        <form class="contact-form" id="contact-form">
+          <div class="form-row">
+            <input type="text" id="contact-name" name="name" placeholder="Your name" class="contact-input" required>
+            <input type="email" id="contact-email" name="email" placeholder="Email address" class="contact-input" required>
+          </div>
+          <textarea id="contact-message" name="message" placeholder="Tell us about your project…" rows="4" class="contact-input contact-textarea" required></textarea>
+          <button type="submit" class="contact-btn" id="contact-submit">Send Message
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- ═══ FOOTER ═══ -->
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <span class="footer-logo">IVORY TECH</span>
+          <p class="footer-tagline">AI-powered full-service digital<br>marketing & design studio.</p>
+        </div>
+        <div class="footer-links">
+          <div class="footer-col">
+            <h4 class="footer-col-title">Services</h4>
+            <a href="#svc-seo">SEO</a>
+            <a href="#svc-social">Social Media</a>
+            <a href="#svc-ppc">PPC Advertising</a>
+            <a href="#svc-content">Content Marketing</a>
+            <a href="#svc-email">Email Marketing</a>
+          </div>
+          <div class="footer-col">
+            <h4 class="footer-col-title">Agency</h4>
+            <a href="#svc-web">Web Design</a>
+            <a href="#svc-brand">Branding</a>
+            <a href="#svc-video">Video Production</a>
+            <a href="#svc-analytics">Analytics</a>
+            <a href="#websites">Websites</a>
+          </div>
+          <div class="footer-col">
+            <h4 class="footer-col-title">Connect</h4>
+            <a href="#">Instagram</a>
+            <a href="#">LinkedIn</a>
+            <a href="#">X / Twitter</a>
+            <a href="#">Dribbble</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 Ivory Tech Solutions. All rights reserved.</span>
+        <a href="admin.html" class="admin-login-link" id="admin-login-link" title="Admin Portal">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2a5 5 0 1 0 0 10 5 5 0 0 0 0-10zM2 21a10 10 0 0 1 20 0"/></svg>
+          Admin
+        </a>
+      </div>
+    </footer>
+
+  </main>
+
+  <!-- GSAP, Lenis, Swiper via CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <script src="https://unpkg.com/@studio-freight/lenis@1.0.34/dist/lenis.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  <audio id="bg-audio" loop>
+    <source src="background.mp3" type="audio/mpeg">
+  </audio>
+  <script src="script.js"></script>
+</body>
+</html>

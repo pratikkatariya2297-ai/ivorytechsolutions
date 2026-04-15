@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ivory Tech Solutions — Admin Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="admin.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+  <!-- 🔐 LOGIN OVERLAY -->
+  <div id="auth-overlay" class="auth-overlay">
+    <div class="auth-box">
+      <h2>Restricted Access</h2>
+      <p>Please log in to access the command center.</p>
+      <form id="login-form">
+        <input type="text" id="username" placeholder="Username" required autocomplete="username">
+        <input type="password" id="password" placeholder="Password" required autocomplete="current-password">
+        <p id="login-error" class="error-msg"></p>
+        <button type="submit" class="admin-btn">Login to Dashboard</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ADMIN LAYOUT -->
+  <div id="admin-app" class="app-container hidden">
+    <button id="mobile-sidebar-toggle" class="mobile-toggle">☰ Menu</button>
+
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <h1>IVORY TECH<br><span>Admin OS</span></h1>
+      </div>
+      <nav class="sidebar-nav">
+        <button class="nav-btn active" data-tab="tab-dashboard">📊 Dashboard</button>
+        <button class="nav-btn" data-tab="tab-analytics">📈 Traffic & Insights</button>
+        <button class="nav-btn" data-tab="tab-services">🛍️ Manage Services</button>
+        <button class="nav-btn" data-tab="tab-portfolio">🎨 Client Portfolio</button>
+        <button class="nav-btn" data-tab="tab-websites">🌐 Website Showcase</button>
+        <button class="nav-btn" data-tab="tab-sessions">👁️ Live Sessions</button>
+        <button class="nav-btn" data-tab="tab-archive">🗄️ Service Archive</button>
+        <button class="nav-btn" data-tab="tab-leads">📝 Leads & B2B</button>
+        <button class="nav-btn" data-tab="tab-student-leads">🎓 Student Enrollments</button>
+        <button class="nav-btn" data-tab="tab-engagement">🙋 Engagement Center</button>
+        <button class="nav-btn" data-tab="tab-student-cms">📚 Student CMS</button>
+        <button class="nav-btn" data-tab="tab-settings">⚙️ Site Settings</button>
+      </nav>
+      <div class="sidebar-footer">
+        <button id="logout-btn" class="nav-btn danger">Log Out</button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+
+      <!-- 1. DASHBOARD -->
+      <section id="tab-dashboard" class="spa-tab active">
+        <header class="tab-header">
+          <h2>Live Command Center</h2>
+          <div class="date-filter">
+            <select id="global-date-filter">
+              <option value="today">Today</option>
+              <option value="7">Last 7 Days</option>
+              <option value="30" selected>Last 30 Days</option>
+              <option value="90">Last 90 Days</option>
+              <option value="all">All Time</option>
+            </select>
+          </div>
+        </header>
+        <div class="metrics-grid">
+          <div class="metric-card"><h3>Views Today</h3><div class="val" id="views-today">0</div><div class="trend" id="trend-today">Live data</div></div>
+          <div class="metric-card"><h3>Lifetime Traffic</h3><div class="val" id="lifetime-traffic">0</div></div>
+          <div class="metric-card"><h3>Total Cart Adds</h3><div class="val" id="total-cart-adds">0</div><div class="trend" id="trend-cart">Based on sessions</div></div>
+          <div class="metric-card"><h3>Active Sessions</h3><div class="val active-pulse" id="dash-active-sessions">0</div><div class="trend">Live right now</div></div>
+        </div>
+        <div class="status-indicators">
+          <div class="status-card"><h4>🔥 Most Added Service</h4><p id="top-service">Waiting for data...</p></div>
+          <div class="status-card"><h4>⭐ Top Lead / Customer</h4><p id="top-lead">Waiting for data...</p></div>
+        </div>
+      </section>
+
+      <!-- 2. ANALYTICS -->
+      <section id="tab-analytics" class="spa-tab hidden">
+        <header class="tab-header">
+          <h2>Traffic Insights & Charting</h2>
+          <div class="date-filter analytics-filter" style="display:flex; gap:10px; align-items:center;">
+            <div id="custom-date-inputs" class="hidden" style="display:none; gap:5px; align-items:center;">
+              <input type="date" id="custom-date-start" style="padding:6px; background:var(--bg-card); color:white; border:1px solid var(--border-color); outline:none;">
+              <span style="color:#888;">to</span>
+              <input type="date" id="custom-date-end" style="padding:6px; background:var(--bg-card); color:white; border:1px solid var(--border-color); outline:none;">
+              <button id="apply-custom-date" class="small-btn">Apply</button>
+            </div>
+            <select id="analytics-date-filter">
+              <option value="today">Today</option>
+              <option value="7" selected>Last 7 Days</option>
+              <option value="30">1 Month</option>
+              <option value="365">1 Year (cap 90 bars)</option>
+              <option value="all">Lifetime (cap 90 bars)</option>
+              <option value="custom">Custom Date</option>
+            </select>
+          </div>
+        </header>
+        <div class="charts-grid border-card"><div class="chart-container"><h3>Real-Time Traffic</h3><canvas id="trafficChart"></canvas></div></div>
+        <div class="analytics-panels">
+          <div class="panel border-card"><h3>Devices & Referrers</h3><ul class="data-list" id="devices-referrers-list"></ul></div>
+          <div class="panel border-card"><h3>Conversion Funnel</h3><div class="funnel-viz" id="funnel-viz-container"></div></div>
+        </div>
+      </section>
+
+      <!-- 3. SERVICES -->
+      <section id="tab-services" class="spa-tab hidden">
+        <header class="tab-header"><h2>Live Storefront Services</h2><button id="add-service-btn" class="admin-btn">➕ Add New Service</button></header>
+        <div id="service-form" class="border-card hidden">
+          <h3>Create / Edit Service</h3>
+          <form id="edit-service-form">
+            <input type="hidden" id="service-id">
+            <div class="form-row"><input type="text" id="service-title" placeholder="Service Title" required><input type="text" id="service-category" placeholder="Category Tags (comma separated)" required></div>
+            <textarea id="service-desc" rows="3" placeholder="Service Description..." required></textarea>
+            <div class="image-uploader"><label>Upload Images (Max 4)</label><input type="file" id="service-images" multiple accept="image/*"><div id="image-preview-container" class="img-previews"></div></div>
+            <div class="form-actions"><button type="submit" class="admin-btn">Save & Sync</button><button type="button" class="admin-btn secondary cancel-btn">Cancel</button></div>
+          </form>
+        </div>
+        <div class="data-table-container"><table class="data-table"><thead><tr><th>Title</th><th>Tags</th><th>Status</th><th>Actions</th></tr></thead><tbody id="services-list-body"></tbody></table></div>
+      </section>
+
+      <!-- 4. CLIENT PORTFOLIO -->
+      <section id="tab-portfolio" class="spa-tab hidden">
+        <header class="tab-header"><h2>Client Portfolio</h2><button id="add-portfolio-btn" class="admin-btn">➕ Add Portfolio Item</button></header>
+        <div id="portfolio-form" class="border-card hidden">
+          <h3>Create / Edit Portfolio</h3>
+          <form id="edit-portfolio-form">
+            <input type="hidden" id="portfolio-id">
+            <div class="form-row">
+              <input type="text" id="portfolio-title" placeholder="Client / Project Name" required>
+              <input type="text" id="portfolio-category" placeholder="Category (e.g. Branding & Web)" required>
+            </div>
+            <div class="image-uploader" style="margin-bottom:1rem;">
+              <label>Upload Portfolio Image</label>
+              <input type="file" id="portfolio-img-file" accept="image/*">
+              <div id="portfolio-image-preview" class="img-previews"></div>
+            </div>
+            <input type="hidden" id="portfolio-img-data" required>
+            <input type="url" id="portfolio-link" placeholder="Portfolio / Case Study Link" style="width:100%;padding:12px;background:var(--bg-dark);border:1px solid var(--border-color);color:white;margin-bottom:1rem;">
+            <div class="form-actions"><button type="submit" class="admin-btn">Save Portfolio</button><button type="button" class="admin-btn secondary cancel-portfolio-btn">Cancel</button></div>
+          </form>
+        </div>
+        <div class="data-table-container"><table class="data-table"><thead><tr><th>Preview</th><th>Title</th><th>Category</th><th>Actions</th></tr></thead><tbody id="portfolio-list-body"></tbody></table></div>
+      </section>
+
+      <!-- 5. WEBSITE SHOWCASE -->
+      <section id="tab-websites" class="spa-tab hidden">
+        <header class="tab-header"><h2>Website Showcase</h2><button id="add-website-btn" class="admin-btn">➕ Add Website</button></header>
+        <div id="website-form" class="border-card hidden">
+          <h3>Create / Edit Website</h3>
+          <form id="edit-website-form">
+            <input type="hidden" id="website-id">
+            <div class="form-row">
+              <input type="text" id="website-title" placeholder="Website Title" required>
+              <input type="url" id="website-url" placeholder="Website URL (https://...)" required>
+            </div>
+            <textarea id="website-desc" rows="2" placeholder="Short description..." required></textarea>
+            <div class="image-uploader" style="margin-bottom:1rem;">
+              <label>Upload Preview Image</label>
+              <input type="file" id="website-img-file" accept="image/*">
+              <div id="website-image-preview" class="img-previews"></div>
+            </div>
+            <input type="hidden" id="website-img-data" required>
+            <div class="form-actions"><button type="submit" class="admin-btn">Save Website</button><button type="button" class="admin-btn secondary cancel-website-btn">Cancel</button></div>
+          </form>
+        </div>
+        <div class="data-table-container"><table class="data-table"><thead><tr><th>Preview</th><th>Title</th><th>URL</th><th>Actions</th></tr></thead><tbody id="websites-list-body"></tbody></table></div>
+      </section>
+
+      <!-- LIVE SESSIONS & TRACKING -->
+      <section id="tab-sessions" class="spa-tab hidden">
+        <header class="tab-header">
+          <h2>Live Sessions & User Tracking</h2>
+          <button id="refresh-sessions-btn" class="admin-btn">🔄 Refresh</button>
+        </header>
+        <div class="metrics-grid" id="session-metrics">
+          <div class="metric-card"><h3>Active Sessions</h3><div class="val" id="active-session-count">0</div><div class="trend">Live right now</div></div>
+          <div class="metric-card"><h3>Total Sessions (30d)</h3><div class="val" id="total-session-count">0</div></div>
+          <div class="metric-card"><h3>Avg Time on Site</h3><div class="val" id="avg-time-on-site">0s</div></div>
+          <div class="metric-card"><h3>Avg Scroll Depth</h3><div class="val" id="avg-scroll-depth">0%</div></div>
+        </div>
+        <div class="data-table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Status</th><th>IP / Location</th><th>Device / Browser</th>
+                <th>OS</th><th>Screen</th><th>Referrer</th>
+                <th>Scroll</th><th>Clicks</th><th>Duration</th><th>Last Active</th>
+              </tr>
+            </thead>
+            <tbody id="sessions-list-body"></tbody>
+          </table>
+        </div>
+        <div class="border-card" style="margin-top:2rem">
+          <h3 style="margin-bottom:1rem">📜 Recent Activity Log</h3>
+          <div id="activity-log-container" style="max-height:400px;overflow-y:auto;"></div>
+        </div>
+      </section>
+
+      <!-- 6. ARCHIVE -->
+      <section id="tab-archive" class="spa-tab hidden">
+        <header class="tab-header"><h2>Service History & Archive</h2><p class="sub-header">Restore previously deleted services.</p></header>
+        <div class="data-table-container"><table class="data-table"><thead><tr><th>Title</th><th>Deleted On</th><th>Actions</th></tr></thead><tbody id="archive-list-body"></tbody></table></div>
+      </section>
+
+      <!-- 7. LEADS -->
+      <section id="tab-leads" class="spa-tab hidden">
+        <header class="tab-header"><h2>Leads & B2B Vendors</h2></header>
+        <div class="data-table-container"><table class="data-table"><thead><tr><th>Name</th><th>Type</th><th>Email</th><th>Device</th><th>Date</th><th>Source</th></tr></thead><tbody id="leads-list-body"></tbody></table></div>
+      </section>
+
+      <!-- STUDENT LEADS -->
+      <section id="tab-student-leads" class="spa-tab hidden">
+        <header class="tab-header"><h2>Student Enrollments</h2><p class="sub-header">Review course applicants from the Student Success portal.</p></header>
+        <div class="data-table-container">
+          <table class="data-table">
+            <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Application Date</th></tr></thead>
+            <tbody id="student-leads-list-body"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 8. ENGAGEMENT -->
+      <section id="tab-engagement" class="spa-tab hidden">
+        <header class="tab-header"><h2>Engagement Center & Push Blasts</h2></header>
+        <div class="engagement-grid">
+          <div class="panel border-card"><h3>🟢 Live Visitors</h3><ul id="live-visitors-list" class="data-list visitors"></ul><p style="color:#888;font-size:12px;margin-top:1rem">Auto-refreshes from session tracker</p></div>
+          <div class="panel border-card blast-panel"><h3>Global Broadcast Blast</h3><p>Send a push notification to all active visitors.</p><textarea id="blast-msg" rows="3" placeholder="We just launched a new service!"></textarea><button id="send-blast-btn" class="admin-btn warning">🚀 Send Blast Now</button></div>
+        </div>
+        <div class="panel border-card diagnostics"><h3>System Diagnostics</h3><p>Session Tracker: <span class="badge badge-success">Active</span></p><p>IP Resolver: <span class="badge badge-success">ipapi.co</span></p><p>Data Store: <span class="badge badge-warning">localStorage</span></p></div>
+      </section>
+
+      
+      <!-- 10. STUDENT CMS -->
+      <section id="tab-student-cms" class="spa-tab hidden">
+        <header class="tab-header">
+          <h2>Student CMS</h2>
+          <p class="sub-header">Manage the Student Success portal syllabus and batch photos.</p>
+        </header>
+
+        <!-- PHOTO GALLERY MANAGER -->
+        <div class="border-card" style="margin-bottom: 2rem;">
+          <h3>Batch Photo Gallery</h3>
+          <p class="sub-header">Upload images that will appear in the Student Carousel. Images will be optimized and saved to the local database.</p>
+          <div class="form-row">
+            <input type="file" id="cms-photo-upload" accept="image/*" class="input-base">
+            <button onclick="uploadStudentPhoto()" class="btn-primary">Add Photo</button>
+          </div>
+          <div class="data-table-container mt-2">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Preview</th>
+                  <th>Image Size</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="cms-photos-list-body">
+                <!-- Data populated via admin.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- SYLLABUS MANAGER -->
+        <div class="border-card">
+          <h3>Course Syllabus</h3>
+          <p class="sub-header">Manage the curriculum accordion list for the Student Success page.</p>
+          <div class="form-grid">
+            <div class="form-col">
+              <label>Module Number</label>
+              <input type="text" id="cms-syllabus-num" placeholder="e.g. 01 /" class="input-base">
+            </div>
+            <div class="form-col">
+              <label>Module Title</label>
+              <input type="text" id="cms-syllabus-title" placeholder="e.g. Intro to Growth Hacking" class="input-base">
+            </div>
+          </div>
+          <div class="form-row" style="margin-top: 1rem;">
+            <div class="form-col" style="flex:1;">
+              <label>Module Description / List items</label>
+              <textarea id="cms-syllabus-desc" class="input-base" rows="3" placeholder="<li>Learn basics</li><li>Write code</li>"></textarea>
+            </div>
+          </div>
+          <button onclick="addSyllabusModule()" class="btn-primary" style="margin-top:1rem;">Add Module</button>
+          
+          <div class="data-table-container mt-2">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Module</th>
+                  <th>Title</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="cms-syllabus-list-body">
+                <!-- Data populated via admin.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- 9. SITE SETTINGS -->
+
+      <section id="tab-settings" class="spa-tab hidden">
+        <header class="tab-header"><h2>Site Settings</h2><p class="sub-header">Manage global site configurations like founder social links.</p></header>
+        
+        <div class="border-card">
+          <h3>Founder Social Links</h3>
+          <p style="margin-bottom: 2rem; color: var(--text-muted);">Leave blank to hide or disable a social link.</p>
+          
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+            <!-- PRANAV -->
+            <div class="panel">
+              <h4>Pranav Gugale</h4>
+              <div class="form-row" style="margin-top: 1rem;">
+                <label>Facebook URL</label>
+                <input type="url" id="setting-pranav-fb" placeholder="https://facebook.com/..." class="contact-input" style="width:100%">
+              </div>
+              <div class="form-row">
+                <label>Instagram URL</label>
+                <input type="url" id="setting-pranav-insta" placeholder="https://instagram.com/..." class="contact-input" style="width:100%">
+              </div>
+              <div class="form-row">
+                <label>LinkedIn URL</label>
+                <input type="url" id="setting-pranav-linkedin" placeholder="https://linkedin.com/..." class="contact-input" style="width:100%">
+              </div>
+            </div>
+
+            <!-- PRATIK -->
+            <div class="panel">
+              <h4>Pratik Katariya</h4>
+              <div class="form-row" style="margin-top: 1rem;">
+                <label>Facebook URL</label>
+                <input type="url" id="setting-pratik-fb" placeholder="https://facebook.com/..." class="contact-input" style="width:100%">
+              </div>
+              <div class="form-row">
+                <label>Instagram URL</label>
+                <input type="url" id="setting-pratik-insta" placeholder="https://instagram.com/..." class="contact-input" style="width:100%">
+              </div>
+              <div class="form-row">
+                <label>LinkedIn URL</label>
+                <input type="url" id="setting-pratik-linkedin" placeholder="https://linkedin.com/..." class="contact-input" style="width:100%">
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top: 2rem;">
+            <button id="save-social-links-btn" class="admin-btn">Save Social Links</button>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="admin.js"></script>
+</body>
+</html>

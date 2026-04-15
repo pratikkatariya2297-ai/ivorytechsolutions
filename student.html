@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IVORY TECH SOLUTIONS — AI-Powered Digital Marketing & Design Studio</title>
+  <meta name="description" content="Ivory Tech Solutions is a full-service AI-powered digital marketing agency crafting premium brand experiences with 99% accuracy through SEO, social media, content strategy, paid advertising, web design and more.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <!-- Swiper.js CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ═══ CINEMATIC PAGE LOADER (8 seconds) ═══ -->
+  <div class="page-loader" id="page-loader">
+    <canvas id="loader-particles-canvas"></canvas>
+    <div class="loader-content">
+      <div class="loader-logo">
+        <span class="loader-logo-main">IVORY TECH</span>
+        <span class="loader-logo-sub">SOLUTIONS</span>
+      </div>
+      <div class="loader-tagline" id="loader-tagline">AI-Powered Digital Excellence</div>
+      <div class="loader-progress-container">
+        <div class="loader-progress-bar" id="loader-progress-bar"></div>
+      </div>
+      <div class="loader-percentage" id="loader-percentage">0%</div>
+      <div class="loader-ai-badge">
+        <div class="ai-pulse-ring"></div>
+        <span>⚡ 99% AI ACCURACY</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ STUDENT LEAD CATCHER POPUP ═══ -->
+  <div class="lead-popup-overlay" id="student-popup-overlay">
+    <div class="lead-popup" id="student-popup">
+      <button class="lead-popup-close" id="student-popup-close">&times;</button>
+      <div class="lead-popup-glow"></div>
+      <div class="lead-popup-badge">
+        <div class="popup-ai-ring"></div>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="m2 17 10 5 10-5"/><path d="m2 12 10 5 10-5"/></svg>
+        <span>ADMISSIONS OPEN · LIMITED SEATS</span>
+      </div>
+      <h2 class="lead-popup-title">Secure Your<br><span>Premium Seat</span></h2>
+      <p class="lead-popup-desc">Speak to our admissions counselor to verify eligibility and claim your spot in the next upcoming batch.</p>
+      <form class="lead-popup-form" id="student-popup-form">
+        <input type="text" id="stu-name" placeholder="Full Name" required>
+        <input type="email" id="stu-email" placeholder="Email Address" required>
+        <input type="text" id="stu-phone" placeholder="Phone Number" required>
+        <button type="submit" class="lead-popup-btn">
+          <span>Submit Application</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ═══ CLICK/TAP RIPPLE CANVAS ═══ -->
+  <canvas id="click-ripple-canvas"></canvas>
+
+  <!-- Custom Cursor -->
+  <div class="cursor-follower" id="cursor-follower"></div>
+  <div class="cursor-dot" id="cursor-dot"></div>
+
+  <!-- ═══ NAVIGATION ═══ -->
+  <!-- 🎵 SOUND TOGGLE BUTTON 🎵 -->
+  <button class="sound-toggle" id="sound-toggle" aria-label="Toggle music" title="Toggle music">
+    <!-- Muted icon (shown when audio is off / not yet started) -->
+    <svg class="sound-icon sound-off" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/>
+    </svg>
+    <!-- Playing icon (shown when audio is playing) -->
+    <svg class="sound-icon sound-on" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+    </svg>
+  </button>
+
+  <nav class="navbar nav-hidden" id="navbar">
+    <div class="logo" data-magnetic>IVORY TECH</div>
+    <div class="nav-links">
+      <a href="index.html#services" data-magnetic>Services</a>
+      <a href="index.html#work" data-magnetic>Work</a>
+      <a href="index.html#websites" data-magnetic>Websites</a>
+      <a href="#" data-magnetic>Student Success</a>
+      <a href="index.html#about" data-magnetic>About</a>
+      <a href="index.html#contact" class="nav-cta" data-magnetic>Get in Touch</a>
+    </div>
+    <button class="menu-toggle" id="menu-toggle" aria-label="Toggle menu">
+      <span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- Mobile Nav Overlay -->
+  <div class="mobile-nav" id="mobile-nav">
+    <a href="index.html#services" class="mobile-nav-link">Services</a>
+    <a href="index.html#work" class="mobile-nav-link">Work</a>
+    <a href="index.html#websites" class="mobile-nav-link">Websites</a>
+    <a href="#" class="mobile-nav-link">Student Success</a>
+    <a href="index.html#about" class="mobile-nav-link">About</a>
+    <a href="index.html#contact" class="mobile-nav-link">Get in Touch</a>
+  </div>
+
+  <!-- Floating Cart Icon -->
+  <div class="cart-float" id="cart-float">
+    <button class="cart-float-btn" id="cart-toggle" aria-label="View Requirements">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      <span class="cart-badge" id="cart-badge">0</span>
+    </button>
+  </div>
+
+  <!-- Cart Drawer -->
+  <div class="cart-drawer-overlay" id="cart-overlay"></div>
+  <div class="cart-drawer" id="cart-drawer">
+    <div class="cart-drawer-header">
+      <h3>Your Requirements</h3>
+      <button class="cart-drawer-close" id="cart-close">&times;</button>
+    </div>
+    <div class="cart-drawer-body" id="cart-body">
+      <p class="cart-empty" id="cart-empty">No services selected yet. Browse our services and add what you need.</p>
+    </div>
+    <div class="cart-drawer-footer">
+      <div class="cart-total" id="cart-total">
+        <span>Selected Services:</span>
+        <strong id="cart-count">0</strong>
+      </div>
+      <button class="cart-checkout-btn" id="cart-checkout">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+        Send via WhatsApp
+      </button>
+    </div>
+  </div>
+
+  <!-- HERO BACKGROUND EFFECTS -->
+  <div class="interactive-bg">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+  <canvas id="hero-particles"></canvas>
+  <canvas id="universe-canvas"></canvas>
+
+  <!-- ═══ AMBIENT BACKGROUND VIDEO ═══ -->
+  <video class="hero-ambient-video" id="hero-ambient-video" autoplay muted loop playsinline>
+    <source src="https://cdn.coverr.co/videos/coverr-abstract-dark-particles-6089/1080p.mp4" type="video/mp4">
+  </video>
+
+  <main>
+    <div style="height: 120px; width: 100%;"></div>
+    <!-- ═══ STUDENT HERO GALLARY ═══ -->
+    <section class="student-hero">
+      <div class="student-hero-content">
+        <span class="section-tag" style="margin: 0 auto 1.5rem auto;">Join the Next Batch</span>
+        <h1 class="student-hero-title">Start Your Tech Career As<br><span id="student-typing-text" style="background: linear-gradient(135deg, #fff 0%, #666 50%, #fff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Social Media Manager</span></h1>
+        <p class="student-hero-sub">Gain real-world skills, work on live projects, and get mentored by industry experts. Join hundreds of placed students.</p>
+        <button class="nav-cta" id="bt-enroll-now" style="font-size: 1.2rem; padding: 16px 40px; border: none; cursor: pointer; position: relative; z-index: 100;">Enroll Now & Transform</button>
+      </div>
+
+      <div class="swiper student-swiper">
+        <div class="swiper-wrapper">
+          <div class="swiper-slide"><img src="https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=2070&auto=format&fit=crop" alt="Batch Photo 1"></div>
+          <div class="swiper-slide"><img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=2070&auto=format&fit=crop" alt="Batch Photo 2"></div>
+          <div class="swiper-slide"><img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=2070&auto=format&fit=crop" alt="Batch Photo 3"></div>
+          <div class="swiper-slide"><img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=2084&auto=format&fit=crop" alt="Batch Photo 4"></div>
+          <div class="swiper-slide"><img src="https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=2070&auto=format&fit=crop" alt="Batch Photo 5"></div>
+        </div>
+        <div class="swiper-pagination"></div>
+      </div>
+    </section>
+
+<!-- ═══ STUDENT SECTION (SYLLABUS) ═══ -->
+    <section class="student-section" id="student-section">
+      <div class="section-header" data-reveal>
+        <span class="section-tag" data-reveal-tag>Student Success</span>
+        <h2 class="section-title" data-reveal-title>AI Digital Marketing<br>Course Syllabus</h2>
+        <p class="section-sub" data-reveal-fade>A comprehensive curriculum organized into 30+ modules. Master everything from foundational strategies to advanced AI-driven marketing.</p>
+      </div>
+
+      <div class="syllabus-container">
+        <div class="syllabus-accordion">
+          <button class="syllabus-accordion-header">
+            <span class="syllabus-module-num">01 /</span>
+            <span class="syllabus-module-title">Digital Marketing Overview</span>
+            <span class="syllabus-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span>
+          </button>
+          <div class="syllabus-accordion-content">
+            <ul>
+              <li>Introduction to Digital Marketing.</li>
+              <li>Digital Marketing vs. Traditional Marketing.</li>
+              <li>Digital Marketing Channels.</li>
+              <li>Scope and Career in Digital Marketing.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="syllabus-accordion">
+          <button class="syllabus-accordion-header">
+            <span class="syllabus-module-num">02 /</span>
+            <span class="syllabus-module-title">AI In Digital Marketing</span>
+            <span class="syllabus-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span>
+          </button>
+          <div class="syllabus-accordion-content">
+            <ul>
+              <li>Understanding AI Digital Marketing and its benefits.</li>
+              <li>Overview of top trending AI tools: ChatGPT, Cursor, Loveable, Midjourney, Captions, and 11 Labs.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="syllabus-accordion">
+          <button class="syllabus-accordion-header">
+            <span class="syllabus-module-num">03 /</span>
+            <span class="syllabus-module-title">Graphic Creation</span>
+            <span class="syllabus-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span>
+          </button>
+          <div class="syllabus-accordion-content">
+            <ul>
+              <li>Introduction to Graphic Designing.</li>
+              <li>Creating Logos, Social Media Posts, Festival Posts, and Product Post Designs.</li>
+              <li>Designing Professional Menu Cards, Brochures, Wedding Invitations, Visiting Cards, and Food Posters.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="syllabus-accordion">
+          <button class="syllabus-accordion-header">
+            <span class="syllabus-module-num">04 /</span>
+            <span class="syllabus-module-title">Video Creation</span>
+            <span class="syllabus-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span>
+          </button>
+          <div class="syllabus-accordion-content">
+            <ul>
+              <li>Introduction to Video Creation.</li>
+              <li>Creating Animated and Presentation Videos.</li>
+              <li>Shooting Video techniques.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="syllabus-accordion">
+          <button class="syllabus-accordion-header">
+            <span class="syllabus-module-num">05 /</span>
+            <span class="syllabus-module-title">Video Optimization</span>
+            <span class="syllabus-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span>
+          </button>
+          <div class="syllabus-accordion-content">
+            <ul>
+              <li>Introduction to Video Optimization and Ranking Factors.</li>
+              <li>YouTube Studio Video Setup.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="syllabus-accordion">
+          <button class="syllabus-accordion-header">
+            <span class="syllabus-module-num">06 /</span>
+            <span class="syllabus-module-title">Reels Mastery Program</span>
+            <span class="syllabus-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span>
+          </button>
+          <div class="syllabus-accordion-content">
+            <ul>
+              <li>Introduction to Instagram Reels and creating engaging content.</li>
+              <li>Techniques for creating and shooting Reels with trending audio.</li>
+              <li>Applying latest trends and challenges to grow an audience.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="syllabus-accordion">
+          <button class="syllabus-accordion-header">
+            <span class="syllabus-module-num">07 /</span>
+            <span class="syllabus-module-title">Local SEO / Google Map</span>
+            <span class="syllabus-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span>
+          </button>
+          <div class="syllabus-accordion-content">
+            <ul>
+              <li>Introduction to Local SEO and Ranking Factors.</li>
+              <li>Google My Business (GMB) Setup.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="syllabus-accordion">
+          <button class="syllabus-accordion-header">
+            <span class="syllabus-module-num">08 /</span>
+            <span class="syllabus-module-title">Competitor Analysis</span>
+            <span class="syllabus-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span>
+          </button>
+          <div class="syllabus-accordion-content">
+            <ul>
+              <li>Introduction to Competitor Analysis and relevant tools.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="syllabus-accordion">
+          <button class="syllabus-accordion-header">
+            <span class="syllabus-module-num">09 /</span>
+            <span class="syllabus-module-title">Instagram Optimization</span>
+            <span class="syllabus-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span>
+          </button>
+          <div class="syllabus-accordion-content">
+            <ul>
+              <li>Creating and setting up an Instagram Business Account.</li>
+              <li>Overview of business account settings.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="syllabus-accordion">
+          <button class="syllabus-accordion-header">
+            <span class="syllabus-module-num">10 /</span>
+            <span class="syllabus-module-title">LinkedIn Optimization</span>
+            <span class="syllabus-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span>
+          </button>
+          <div class="syllabus-accordion-content">
+            <ul>
+              <li>Creating a business page and profile optimization.</li>
+              <li>Finding jobs using LinkedIn Jobs.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="syllabus-accordion">
+          <button class="syllabus-accordion-header">
+            <span class="syllabus-module-num">11 /</span>
+            <span class="syllabus-module-title">Facebook Optimization</span>
+            <span class="syllabus-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span>
+          </button>
+          <div class="syllabus-accordion-content">
+            <ul>
+              <li>Creating accounts and business pages.</li>
+              <li>Adding business logos and cover pictures.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="syllabus-accordion">
+          <button class="syllabus-accordion-header">
+            <span class="syllabus-module-num">12 /</span>
+            <span class="syllabus-module-title">YouTube Optimization</span>
+            <span class="syllabus-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span>
+          </button>
+          <div class="syllabus-accordion-content">
+            <ul>
+              <li>Creating a YouTube account and channel.</li>
+              <li>Adding channel logos and banners.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="syllabus-accordion">
+          <button class="syllabus-accordion-header">
+            <span class="syllabus-module-num">13 /</span>
+            <span class="syllabus-module-title">Other Trending Social Media Platforms</span>
+            <span class="syllabus-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span>
+          </button>
+          <div class="syllabus-accordion-content">
+            <ul>
+              <li>Training on Pinterest, Sharechat, and Threads.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="syllabus-accordion">
+          <button class="syllabus-accordion-header">
+            <span class="syllabus-module-num">14 /</span>
+            <span class="syllabus-module-title">Social Media Automation</span>
+            <span class="syllabus-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span>
+          </button>
+          <div class="syllabus-accordion-content">
+            <ul>
+              <li>Understanding automation and the tools used.</li>
+              <li>Scheduling posts and connecting social channels.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="syllabus-accordion">
+          <button class="syllabus-accordion-header">
+            <span class="syllabus-module-num">15 /</span>
+            <span class="syllabus-module-title">Social Media Calendar</span>
+            <span class="syllabus-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span>
+          </button>
+          <div class="syllabus-accordion-content">
+            <ul>
+              <li>Creating monthly social media calendar lists.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="syllabus-accordion">
+          <button class="syllabus-accordion-header">
+            <span class="syllabus-module-num">16 /</span>
+            <span class="syllabus-module-title">Influencer Marketing</span>
+            <span class="syllabus-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span>
+          </button>
+          <div class="syllabus-accordion-content">
+            <ul>
+              <li>Introduction to influencer marketing with case studies.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="syllabus-accordion">
+          <button class="syllabus-accordion-header">
+            <span class="syllabus-module-num">17 /</span>
+            <span class="syllabus-module-title">Lead & Traffic Generation</span>
+            <span class="syllabus-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span>
+          </button>
+          <div class="syllabus-accordion-content">
+            <ul>
+              <li>Methods to generate traffic and leads.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="syllabus-accordion">
+          <button class="syllabus-accordion-header">
+            <span class="syllabus-module-num">18 /</span>
+            <span class="syllabus-module-title">Landing Page Optimization / Linktree</span>
+            <span class="syllabus-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span>
+          </button>
+          <div class="syllabus-accordion-content">
+            <ul>
+              <li>Creating and optimizing landing pages.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="syllabus-accordion">
+          <button class="syllabus-accordion-header">
+            <span class="syllabus-module-num">19 /</span>
+            <span class="syllabus-module-title">Facebook & Instagram Marketing</span>
+            <span class="syllabus-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span>
+          </button>
+          <div class="syllabus-accordion-content">
+            <ul>
+              <li>Basics of ads and introduction to various advertisement types.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="syllabus-accordion">
+          <button class="syllabus-accordion-header">
+            <span class="syllabus-module-num">20 /</span>
+            <span class="syllabus-module-title">Interview Preparation</span>
+            <span class="syllabus-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span>
+          </button>
+          <div class="syllabus-accordion-content">
+            <ul>
+              <li>Preparation for interview questions, resume building.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+<!-- ═══ FOOTER ═══ -->
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <span class="footer-logo">IVORY TECH</span>
+          <p class="footer-tagline">AI-powered full-service digital<br>marketing & design studio.</p>
+        </div>
+        <div class="footer-links">
+          <div class="footer-col">
+            <h4 class="footer-col-title">Services</h4>
+            <a href="#svc-seo">SEO</a>
+            <a href="#svc-social">Social Media</a>
+            <a href="#svc-ppc">PPC Advertising</a>
+            <a href="#svc-content">Content Marketing</a>
+            <a href="#svc-email">Email Marketing</a>
+          </div>
+          <div class="footer-col">
+            <h4 class="footer-col-title">Agency</h4>
+            <a href="#svc-web">Web Design</a>
+            <a href="#svc-brand">Branding</a>
+            <a href="#svc-video">Video Production</a>
+            <a href="#svc-analytics">Analytics</a>
+            <a href="#websites">Websites</a>
+          </div>
+          <div class="footer-col">
+            <h4 class="footer-col-title">Connect</h4>
+            <a href="#">Instagram</a>
+            <a href="#">LinkedIn</a>
+            <a href="#">X / Twitter</a>
+            <a href="#">Dribbble</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 Ivory Tech Solutions. All rights reserved.</span>
+        <a href="admin.html" class="admin-login-link" id="admin-login-link" title="Admin Portal">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2a5 5 0 1 0 0 10 5 5 0 0 0 0-10zM2 21a10 10 0 0 1 20 0"/></svg>
+          Admin
+        </a>
+      </div>
+    </footer>
+
+  </main>
+
+  <!-- GSAP, Lenis, Swiper via CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <script src="https://unpkg.com/@studio-freight/lenis@1.0.34/dist/lenis.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  <audio id="bg-audio" loop>
+    <source src="background.mp3" type="audio/mpeg">
+  </audio>
+  <script src="script.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Swiper Init
+      new Swiper('.student-swiper', {
+        effect: "coverflow", grabCursor: true, centeredSlides: true,
+        slidesPerView: "auto", loop: true,
+        coverflowEffect: { rotate: 20, stretch: 0, depth: 200, modifier: 1, slideShadows: true },
+        pagination: { el: ".swiper-pagination", clickable: true },
+        autoplay: { delay: 3000, disableOnInteraction: false }
+      });
+
+      
+      // Typing Effect
+      const studentTypingWords = ['Social Media Manager', 'Graphic Designer', 'Content Creator', 'Web Developer', 'UI/UX Designer'];
+      const stuTypingTextEl = document.getElementById('student-typing-text');
+      let stuWordIndex = 0, stuCharIndex = 0, stuIsDeleting = false, stuTypingSpeed = 100;
+      
+      function stuTypeEffect() {
+        if(!stuTypingTextEl) return;
+        const w = studentTypingWords[stuWordIndex];
+        if (!stuIsDeleting) {
+          stuTypingTextEl.textContent = w.substring(0, stuCharIndex + 1);
+          stuCharIndex++;
+          stuTypingSpeed = 80 + Math.random() * 60;
+          if (stuCharIndex === w.length) {
+            stuTypingSpeed = 2000;
+            stuIsDeleting = true;
+          }
+        } else {
+          stuTypingTextEl.textContent = w.substring(0, stuCharIndex - 1);
+          stuCharIndex--;
+          stuTypingSpeed = 40;
+          if (stuCharIndex === 0) {
+            stuIsDeleting = false;
+            stuWordIndex = (stuWordIndex + 1) % studentTypingWords.length;
+            stuTypingSpeed = 500;
+          }
+        }
+        setTimeout(stuTypeEffect, stuTypingSpeed);
+      }
+      
+      if (stuTypingTextEl) {
+        stuTypeEffect();
+      }
+      
+      // Popup Logic
+
+      const overlay = document.getElementById('student-popup-overlay');
+      const closeBtn = document.getElementById('student-popup-close');
+      const enrollBtn = document.getElementById('bt-enroll-now');
+      const form = document.getElementById('student-popup-form');
+
+      if(enrollBtn) enrollBtn.addEventListener('click', () => overlay.classList.add('show'));
+      if(closeBtn) closeBtn.addEventListener('click', () => overlay.classList.remove('show'));
+
+      if(form) {
+        form.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const name = document.getElementById('stu-name').value;
+          const email = document.getElementById('stu-email').value;
+          const phone = document.getElementById('stu-phone').value;
+
+          const leads = JSON.parse(localStorage.getItem('ivory_student_leads') || '[]');
+          leads.push({ id: 'stu_' + Date.now(), name, email, phone, date: new Date().toLocaleDateString() });
+          localStorage.setItem('ivory_student_leads', JSON.stringify(leads));
+
+          const btn = form.querySelector('button');
+          const origHtml = btn.innerHTML;
+          btn.innerHTML = '<span>Application Sent!</span>';
+          btn.style.background = 'var(--success)';
+          
+          setTimeout(() => {
+            overlay.classList.remove('show');
+            form.reset();
+            btn.innerHTML = origHtml;
+            btn.style.background = '';
+          }, 2000);
+        });
+      }
+    });
+  </script>
+
+<script>
+  // Dynamic Injection for Student CMS
+  document.addEventListener('DOMContentLoaded', () => {
+    // 1. Render CMS Photos if they exist
+    try {
+      const storedPhotos = JSON.parse(localStorage.getItem('ivory_student_photos') || '[]');
+      if (storedPhotos && storedPhotos.length > 0) {
+        const wrapper = document.querySelector('.student-swiper .swiper-wrapper');
+        if (wrapper) {
+          wrapper.innerHTML = storedPhotos.map(photo => `
+            <div class="swiper-slide">
+              <img src="${photo}" alt="Student Batch Photo">
+            </div>
+          `).join('');
+          
+          // Re-trigger Swiper update if swiper instance is attached
+          const swiperEl = document.querySelector('.student-swiper');
+          if (swiperEl && swiperEl.swiper) {
+            swiperEl.swiper.update();
+          }
+        }
+      }
+    } catch(e) { console.warn("Failed to load CMS photos", e); }
+
+    // 2. Render CMS Syllabus if it exists
+    try {
+      const storedSyllabus = JSON.parse(localStorage.getItem('ivory_student_syllabus') || '[]');
+      if (storedSyllabus && storedSyllabus.length > 0) {
+        const container = document.querySelector('.syllabus-container');
+        if (container) {
+          container.innerHTML = storedSyllabus.map(s => `
+            <div class="syllabus-accordion">
+              <button class="syllabus-accordion-header">
+                <span class="syllabus-module-num">${s.num}</span>
+                <span class="syllabus-module-title">${s.title}</span>
+                <span class="syllabus-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span>
+              </button>
+              <div class="syllabus-accordion-content">
+                <ul>
+                  ${s.desc.split('<li>').join('<li>').split('</li>').join('</li>')}
+                </ul>
+              </div>
+            </div>
+          `).join('');
+          
+          // Rebind accordion events
+          if (typeof initSyllabusAccordion === 'function') {
+            initSyllabusAccordion();
+          }
+        }
+      }
+    } catch(e) { console.warn("Failed to load CMS syllabus", e); }
+  });
+</script>
+</body>
+</html>

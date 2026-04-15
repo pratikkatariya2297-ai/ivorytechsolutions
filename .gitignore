@@ -1,0 +1,29 @@
+# Sensitive Keys & Deployment
+deploy_key
+deploy_key.pub
+deploy_key_rsa
+deploy_key_rsa.pub
+deploy_key_final
+deploy_key_final.pub
+deploy_clean
+deploy_clean.pub
+deploy_key_2048
+deploy_key_2048.pub
+KEY_FOR_PASTING.txt
+DEPLOY_PUBLIC_KEY.txt
+clean_public_key.txt
+
+# Python Utility Scripts
+fix_*.py
+patch_*.py
+add_*.py
+extract.py
+enhance_*.py
+
+# OS & Logs
+.DS_Store
+Thumbs.db
+*.log
+node_modules/
+.vscode/
+.idea/
