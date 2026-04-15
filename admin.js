@@ -102,9 +102,11 @@ document.addEventListener('DOMContentLoaded', () => {
       const uniqueIps = new Set(daySessions.map(s => s.ip || s.id));
       uniqueCounts.push(uniqueIps.size);
       
-      const dayActivities = activities.filter(a => new Date(a.timestamp).toLocaleDateString() === str);
+      // Sync logic: Only count meaningful interactions (cart/interest) for the 'Interactions' line
+      const dayActivities = activities.filter(a => (a.type === 'cart_add' || a.type === 'service_interest') && new Date(a.timestamp).toLocaleDateString() === str);
       actionCounts.push(dayActivities.length);
     }
+
 
     trafficChartInstance = new Chart(ctx, {
       type:'bar', 
@@ -207,9 +209,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const active = sessions.filter(s => (nowTime - new Date(s.lastActive).getTime()) < 30000).length;
     document.getElementById('dash-active-sessions').textContent = active;
     
-    // Cart Adds / Interactions Mapping
+    // Cart Adds / Interactions Mapping (High-intent only)
     const trueAdds = activities.filter(a => a.type === 'cart_add' || a.type === 'service_interest').length;
-    document.getElementById('total-cart-adds').textContent = trueAdds || activities.filter(a => a.type === 'click').length;
+    document.getElementById('total-cart-adds').textContent = trueAdds;
+
 
     
     // Top Service (Random actual service logic based on views)

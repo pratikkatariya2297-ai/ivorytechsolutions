@@ -939,7 +939,10 @@ document.addEventListener('DOMContentLoaded', () => {
     heroTimeline.to('.hero-char', { y:0, rotateX:0, opacity:1, duration:0.8, stagger:0.04, ease:'power4.out' });
   }
   heroTimeline.call(() => { typeEffect(); }, null, '+=0.3');
-  heroTimeline.to('.hero-subtext-container', { y:0, opacity:1, duration:1.2, ease:'power4.out' }, '-=0.6');
+  if (document.querySelector('.hero-subtext-container')) {
+    heroTimeline.to('.hero-subtext-container', { y:0, opacity:1, duration:1.2, ease:'power4.out' }, '-=0.6');
+  }
+
 
   // ── AI ACCURACY RING ANIMATION ──
   const aiRing = document.querySelector('.ai-ring-progress');
@@ -959,27 +962,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ── NAVBAR (hidden until scroll) ──
   const navbar = document.getElementById('navbar');
-  let navRevealed = false;
-  ScrollTrigger.create({
-    start: 'top -10',
-    onUpdate: (self) => {
-      // Reveal navbar on first scroll
-      if (window.scrollY > 10 && !navRevealed) {
-        navbar.classList.remove('nav-hidden');
-        navbar.classList.add('nav-visible');
-        navRevealed = true;
+  if (navbar) {
+    let navRevealed = false;
+    ScrollTrigger.create({
+      start: 'top -10',
+      onUpdate: (self) => {
+        // Reveal navbar on first scroll
+        if (window.scrollY > 10 && !navRevealed) {
+          navbar.classList.remove('nav-hidden');
+          navbar.classList.add('nav-visible');
+          navRevealed = true;
+        }
+        // Scrolled bg
+        if (self.direction === 1 && window.scrollY > 80) navbar.classList.add('scrolled');
+        else if (window.scrollY <= 80) navbar.classList.remove('scrolled');
+        // Hide when scrolled back to very top
+        if (window.scrollY <= 10) {
+          navbar.classList.add('nav-hidden');
+          navbar.classList.remove('nav-visible');
+          navRevealed = false;
+        }
       }
-      // Scrolled bg
-      if (self.direction === 1 && window.scrollY > 80) navbar.classList.add('scrolled');
-      else if (window.scrollY <= 80) navbar.classList.remove('scrolled');
-      // Hide when scrolled back to very top
-      if (window.scrollY <= 10) {
-        navbar.classList.add('nav-hidden');
-        navbar.classList.remove('nav-visible');
-        navRevealed = false;
-      }
-    }
-  });
+    });
+  }
+
   const menuToggle = document.getElementById('menu-toggle');
   const mobileNav = document.getElementById('mobile-nav');
   if (menuToggle && mobileNav) {
@@ -1065,7 +1071,10 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // ── CTA ──
-  gsap.from('.cta-inner', { scrollTrigger:{trigger:'.contact-cta',start:'top 80%',once:true}, y:60, opacity:0, scale:0.97, duration:1.2, ease:'power3.out' });
+  if (document.querySelector('.contact-cta') && document.querySelector('.cta-inner')) {
+    gsap.from('.cta-inner', { scrollTrigger:{trigger:'.contact-cta',start:'top 80%',once:true}, y:60, opacity:0, scale:0.97, duration:1.2, ease:'power3.out' });
+  }
+
 
   // ── MARQUEE ──
   const marqueeTrack = document.getElementById('marquee-track');
@@ -1076,7 +1085,10 @@ document.addEventListener('DOMContentLoaded', () => {
   if(scrollIndicator) ScrollTrigger.create({start:'top -200',onUpdate:()=>{if(window.scrollY>200){scrollIndicator.style.opacity='0';scrollIndicator.style.transform='translateY(10px)';}else{scrollIndicator.style.opacity='';scrollIndicator.style.transform='';}}});
 
   // ── FOOTER ──
-  gsap.from('.footer-inner', { scrollTrigger:{trigger:'.site-footer',start:'top 90%',once:true}, y:30, opacity:0, duration:1, ease:'power3.out' });
+  if (document.querySelector('.site-footer') && document.querySelector('.footer-inner')) {
+    gsap.from('.footer-inner', { scrollTrigger:{trigger:'.site-footer',start:'top 90%',once:true}, y:30, opacity:0, duration:1, ease:'power3.out' });
+  }
+
 
   // ── CONTACT FORM ──
   const contactForm = document.getElementById('contact-form');
