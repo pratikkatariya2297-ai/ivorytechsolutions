@@ -2,6 +2,14 @@
 //   IVORY TECH SOLUTIONS — ADMIN PORTAL LOGIC
 // ═══════════════════════════════════════════════════════
 
+import { dbListenSessions, dbListenLeads, dbListenActivities } from './firebase-service.js';
+
+// Global Cloud Cache
+let cloudSessions = [];
+let cloudLeads = [];
+let cloudActivities = [];
+
+
 document.addEventListener('DOMContentLoaded', () => {
 
   // ── 1. AUTHENTICATION ─────────────────────────────
@@ -14,8 +22,10 @@ document.addEventListener('DOMContentLoaded', () => {
   if (sessionStorage.getItem('admin_logged_in') === 'true') {
     authOverlay.classList.add('hidden');
     appContainer.classList.remove('hidden');
+    initCloudListeners();
     try { initCharts(); } catch(e) {}
   }
+
 
   loginForm.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -25,8 +35,10 @@ document.addEventListener('DOMContentLoaded', () => {
       sessionStorage.setItem('admin_logged_in', 'true');
       authOverlay.classList.add('hidden');
       appContainer.classList.remove('hidden');
+      initCloudListeners();
       try { initCharts(); } catch(e) {}
     } else { loginError.textContent = 'Invalid credentials. Access denied.'; }
+
   });
 
   logoutBtn.addEventListener('click', () => { sessionStorage.removeItem('admin_logged_in'); window.location.reload(); });
@@ -46,7 +58,31 @@ document.addEventListener('DOMContentLoaded', () => {
   const mobileToggle = document.getElementById('mobile-sidebar-toggle');
   if (mobileToggle) mobileToggle.addEventListener('click', () => document.getElementById('sidebar').classList.toggle('open'));
 
-  // ── 3. CHARTS & ANALYTICS ────────────────────────────────
+  // ── 3. CLOUD LISTENERS ────────────────────────────
+  function initCloudListeners() {
+    dbListenSessions((data) => {
+      cloudSessions = data;
+      console.log('☁️ Real-time Sessions Sync:', data.length);
+      updateDashboardMetrics();
+      renderTrafficChart();
+      renderSessionsList(data);
+    });
+
+    dbListenLeads((data) => {
+      cloudLeads = data;
+      console.log('☁️ Real-time Leads Sync:', data.length);
+      updateDashboardMetrics();
+      renderLeadsTable(data);
+    });
+
+    dbListenActivities((data) => {
+      cloudActivities = data;
+      updateEngagementLog(data);
+    });
+  }
+
+  // ── 4. CHARTS & ANALYTICS ────────────────────────────────
+
   let trafficChartInstance = null;
   
   function renderTrafficChart(range = 7) {
@@ -70,8 +106,9 @@ document.addEventListener('DOMContentLoaded', () => {
     gradient.addColorStop(0, 'rgba(255,255,255,0.8)');
     gradient.addColorStop(1, 'rgba(255,255,255,0.1)');
     
-    const sessions = JSON.parse(localStorage.getItem('ivory_sessions')||'[]');
-    const activities = JSON.parse(localStorage.getItem('ivory_session_activity')||'[]');
+    const sessions = cloudSessions.length > 0 ? cloudSessions : JSON.parse(localStorage.getItem('ivory_sessions')||'[]');
+    const activities = cloudActivities.length > 0 ? cloudActivities : JSON.parse(localStorage.getItem('ivory_session_activity')||'[]');
+
     
     const now = new Date();
     const days = []; const counts = []; const uniqueCounts = []; const actionCounts = [];
@@ -195,8 +232,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   function updateDashboardMetrics() {
-    const sessions = JSON.parse(localStorage.getItem('ivory_sessions')||'[]');
-    const activities = JSON.parse(localStorage.getItem('ivory_session_activity')||'[]');
+    const sessions = cloudSessions.length > 0 ? cloudSessions : JSON.parse(localStorage.getItem('ivory_sessions')||'[]');
+    const activities = cloudActivities.length > 0 ? cloudActivities : JSON.parse(localStorage.getItem('ivory_session_activity')||'[]');
+
     
     // View today vs lifetime
     const todayStr = new Date().toLocaleDateString();
@@ -223,12 +261,13 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('top-service').textContent = 'No Services Configured';
     }
     
-    const leads = JSON.parse(localStorage.getItem('ivory_leads')||'[]');
+    const leads = cloudLeads.length > 0 ? cloudLeads : JSON.parse(localStorage.getItem('ivory_leads')||'[]');
     if(leads.length > 0) {
-      document.getElementById('top-lead').textContent = leads[leads.length-1].name || leads[leads.length-1].email || 'Anonymous';
+      document.getElementById('top-lead').textContent = leads[0].name || leads[0].email || 'Anonymous';
     } else {
       document.getElementById('top-lead').textContent = 'Waiting for leads...';
     }
+
     
     updateAnalyticsUI(sessions, leads, trueAdds);
   }

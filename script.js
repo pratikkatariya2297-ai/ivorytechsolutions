@@ -3,6 +3,9 @@
    Editorial Noir × AI-Powered × Rich Animations
    ═══════════════════════════════════════════════════════ */
 
+import { dbSaveSession, dbLogActivity, dbSaveLead } from './firebase-service.js';
+
+
 // ═══════════════════════════════════════════════════════
 //  CUSTOM CURSOR INJECTION
 // ═══════════════════════════════════════════════════════
@@ -1101,9 +1104,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const inputs = contactForm.querySelectorAll('input, select, textarea');
         const leadObj = { id:'lead-'+Date.now(), date:new Date().toLocaleDateString(), device:window.innerWidth<768?'Mobile':'Desktop' };
         inputs.forEach(input => { if(input.type==='text')leadObj.name=input.value; else if(input.type==='email')leadObj.email=input.value; });
+        
+        // ── Cloud Save (Firebase) ──
+        dbSaveLead(leadObj);
+        
+        // ── Local Fallback ──
         const leads = JSON.parse(localStorage.getItem('ivory_leads')||'[]');
         leads.unshift(leadObj); localStorage.setItem('ivory_leads', JSON.stringify(leads));
       } catch(err) { console.error('Lead capture err', err); }
+
       gsap.to(btn, { scale:0.95,duration:0.1,yoyo:true,repeat:1,
         onComplete:()=>{ btn.textContent='✓ Sent!'; btn.style.opacity='0.7'; btn.disabled=true;
           setTimeout(()=>{ btn.innerHTML='Send Message <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>'; btn.style.opacity='1'; btn.disabled=false; contactForm.reset(); },2500);
@@ -1200,6 +1209,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // ── Save session ──
   function saveSession() {
     sessionData.lastActive = new Date().toISOString();
+    
+    // ── Cloud Save (Firebase) ──
+    dbSaveSession(sessionId, sessionData);
+
+    // ── Local Fallback ──
     const sessions = JSON.parse(localStorage.getItem(SESSION_KEY) || '[]');
     const idx = sessions.findIndex(s => s.id === sessionId);
     if (idx > -1) sessions[idx] = sessionData;
@@ -1209,18 +1223,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ── Save activity event ──
   function logActivity(type, data) {
-    const activities = JSON.parse(localStorage.getItem(ACTIVITY_KEY) || '[]');
-    activities.push({
+    const event = {
       sessionId,
       type,
       data,
       timestamp: new Date().toISOString(),
       page: window.location.pathname
-    });
-    // Keep last 500 events only
+    };
+
+    // ── Cloud Save (Firebase) ──
+    dbLogActivity(event);
+
+    // ── Local Fallback ──
+    const activities = JSON.parse(localStorage.getItem(ACTIVITY_KEY) || '[]');
+    activities.push(event);
     if (activities.length > 500) activities.splice(0, activities.length - 500);
     localStorage.setItem(ACTIVITY_KEY, JSON.stringify(activities));
   }
+
 
   // ── IP & Geolocation (free API) ──
   fetch('https://ipapi.co/json/')

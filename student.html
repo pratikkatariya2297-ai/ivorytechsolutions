@@ -541,26 +541,37 @@
       if (stuTypingTextEl) {
         stuTypeEffect();
       }
-      
-      // Popup Logic
+    });
+  </script>
 
-      const overlay = document.getElementById('student-popup-overlay');
+  <script type="module">
+    import { dbSaveStudentLead } from './firebase-service.js';
+
+    // ═══ LEAD POPUP LOGIC ═══
+    document.addEventListener('DOMContentLoaded', () => {
+      const overlay  = document.getElementById('student-popup-overlay');
+      const enrollBtn= document.getElementById('bt-enroll-now');
       const closeBtn = document.getElementById('student-popup-close');
-      const enrollBtn = document.getElementById('bt-enroll-now');
       const form = document.getElementById('student-popup-form');
 
       if(enrollBtn) enrollBtn.addEventListener('click', () => overlay.classList.add('show'));
       if(closeBtn) closeBtn.addEventListener('click', () => overlay.classList.remove('show'));
 
       if(form) {
-        form.addEventListener('submit', (e) => {
+        form.addEventListener('submit', async (e) => {
           e.preventDefault();
           const name = document.getElementById('stu-name').value;
           const email = document.getElementById('stu-email').value;
           const phone = document.getElementById('stu-phone').value;
 
+          const leadData = { id: 'stu_' + Date.now(), name, email, phone, date: new Date().toLocaleDateString() };
+
+          // ── Cloud Save (Firebase) ──
+          dbSaveStudentLead(leadData);
+
+          // ── Local Fallback ──
           const leads = JSON.parse(localStorage.getItem('ivory_student_leads') || '[]');
-          leads.push({ id: 'stu_' + Date.now(), name, email, phone, date: new Date().toLocaleDateString() });
+          leads.push(leadData);
           localStorage.setItem('ivory_student_leads', JSON.stringify(leads));
 
           const btn = form.querySelector('button');
@@ -576,62 +587,57 @@
           }, 2000);
         });
       }
+
+      // 1. Render CMS Photos if they exist
+      try {
+        const storedPhotos = JSON.parse(localStorage.getItem('ivory_student_photos') || '[]');
+        if (storedPhotos && storedPhotos.length > 0) {
+          const wrapper = document.querySelector('.student-swiper .swiper-wrapper');
+          if (wrapper) {
+            wrapper.innerHTML = storedPhotos.map(photo => `
+              <div class="swiper-slide">
+                <img src="${photo}" alt="Student Batch Photo">
+              </div>
+            `).join('');
+            
+            // Re-trigger Swiper update if swiper instance is attached
+            const swiperEl = document.querySelector('.student-swiper');
+            if (swiperEl && swiperEl.swiper) {
+              swiperEl.swiper.update();
+            }
+          }
+        }
+      } catch(e) { console.warn("Failed to load CMS photos", e); }
+
+      // 2. Render CMS Syllabus if it exists
+      try {
+        const storedSyllabus = JSON.parse(localStorage.getItem('ivory_student_syllabus') || '[]');
+        if (storedSyllabus && storedSyllabus.length > 0) {
+          const container = document.querySelector('.syllabus-container');
+          if (container) {
+            container.innerHTML = storedSyllabus.map(s => `
+              <div class="syllabus-accordion">
+                <button class="syllabus-accordion-header">
+                  <span class="syllabus-module-num">${s.num}</span>
+                  <span class="syllabus-module-title">${s.title}</span>
+                  <span class="syllabus-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span>
+                </button>
+                <div class="syllabus-accordion-content">
+                  <ul>
+                    ${s.desc}
+                  </ul>
+                </div>
+              </div>
+            `).join('');
+            
+            // Rebind accordion events
+            if (typeof initSyllabusAccordion === 'function') {
+              initSyllabusAccordion();
+            }
+          }
+        }
+      } catch(e) { console.warn("Failed to load CMS syllabus", e); }
     });
   </script>
-
-<script>
-  // Dynamic Injection for Student CMS
-  document.addEventListener('DOMContentLoaded', () => {
-    // 1. Render CMS Photos if they exist
-    try {
-      const storedPhotos = JSON.parse(localStorage.getItem('ivory_student_photos') || '[]');
-      if (storedPhotos && storedPhotos.length > 0) {
-        const wrapper = document.querySelector('.student-swiper .swiper-wrapper');
-        if (wrapper) {
-          wrapper.innerHTML = storedPhotos.map(photo => `
-            <div class="swiper-slide">
-              <img src="${photo}" alt="Student Batch Photo">
-            </div>
-          `).join('');
-          
-          // Re-trigger Swiper update if swiper instance is attached
-          const swiperEl = document.querySelector('.student-swiper');
-          if (swiperEl && swiperEl.swiper) {
-            swiperEl.swiper.update();
-          }
-        }
-      }
-    } catch(e) { console.warn("Failed to load CMS photos", e); }
-
-    // 2. Render CMS Syllabus if it exists
-    try {
-      const storedSyllabus = JSON.parse(localStorage.getItem('ivory_student_syllabus') || '[]');
-      if (storedSyllabus && storedSyllabus.length > 0) {
-        const container = document.querySelector('.syllabus-container');
-        if (container) {
-          container.innerHTML = storedSyllabus.map(s => `
-            <div class="syllabus-accordion">
-              <button class="syllabus-accordion-header">
-                <span class="syllabus-module-num">${s.num}</span>
-                <span class="syllabus-module-title">${s.title}</span>
-                <span class="syllabus-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span>
-              </button>
-              <div class="syllabus-accordion-content">
-                <ul>
-                  ${s.desc.split('<li>').join('<li>').split('</li>').join('</li>')}
-                </ul>
-              </div>
-            </div>
-          `).join('');
-          
-          // Rebind accordion events
-          if (typeof initSyllabusAccordion === 'function') {
-            initSyllabusAccordion();
-          }
-        }
-      }
-    } catch(e) { console.warn("Failed to load CMS syllabus", e); }
-  });
-</script>
 </body>
 </html>
