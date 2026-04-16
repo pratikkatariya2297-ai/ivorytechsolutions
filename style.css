@@ -964,8 +964,12 @@ html.lenis{height:auto} .lenis.lenis-smooth{scroll-behavior:auto!important} .len
 
   /* ── Services ── */
   .services{padding:5rem 0}
-  .services-grid{grid-template-columns:1fr;padding:0 5vw}
-  .service-card{padding:2rem}
+  .services-grid{grid-template-columns:repeat(2, 1fr);padding:0 5vw}
+  .service-card{padding:1.5rem}
+  .service-title{font-size:16px; margin-bottom: 0.75rem;}
+  .service-desc{font-size:12px; margin-bottom:1rem;}
+  .service-tags{gap:4px;}
+  .service-tags li{font-size:10px; padding:3px 8px;}
 
   /* ── Process ── */
   .process{padding:5rem 0}
@@ -1042,8 +1046,12 @@ html.lenis{height:auto} .lenis.lenis-smooth{scroll-behavior:auto!important} .len
   .hero-video-container{aspect-ratio:16/9}
   .section-title{font-size:clamp(22px,9vw,36px)}
   .stat-number{font-size:clamp(32px,9vw,48px)}
-  .services-grid{padding:0 4vw}
-  .service-card{padding:1.5rem}
+  .services-grid{padding:0 2vw; gap:0.5rem;}
+  .service-card{padding:1rem;}
+  .service-title{font-size:14px; line-height:1.2;}
+  .service-desc{font-size:11px; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;}
+  .service-tags li{font-size:8px; padding:2px 6px;}
+  .add-to-cart-btn{font-size:8.5px; padding:8px 4px; gap:4px; letter-spacing:0;}
   .websites-grid{padding:0 4vw}
   .testimonials-grid{padding:0 4vw}
   .contact-cta{padding:3rem 4vw}
