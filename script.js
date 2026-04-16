@@ -277,16 +277,21 @@ document.addEventListener('DOMContentLoaded', () => {
           document.body.classList.remove('loader-active');
           cancelAnimationFrame(loaderAnimId);
 
-          // Always start at the top of the page
-          window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+          // Always start at the top of the page on initial entry
+          if (!sessionStorage.getItem('ivory_site_entered')) {
+             window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+             sessionStorage.setItem('ivory_site_entered', 'true');
+          }
 
           // ── AUTOPLAY AUDIO (user gesture already given at "Enter") ──
           if (bgAudio) {
+            const savedTime = sessionStorage.getItem('ivory_audio_time');
+            if (savedTime) bgAudio.currentTime = parseFloat(savedTime);
+            
             bgAudio.play().then(() => {
               if (soundBtn) soundBtn.classList.add('playing');
               sessionStorage.setItem('ivory_audio_playing', 'true');
             }).catch(() => {
-              // Very rare fallback — just wait for next tap
               if (soundBtn) soundBtn.classList.remove('playing');
               sessionStorage.setItem('ivory_audio_playing', 'false');
             });
@@ -509,15 +514,26 @@ function initDatabaseAndRenderServices() {
 }
 
 // ═══════════════════════════════════════════════════════
-//  LENIS SMOOTH SCROLLING
+//  LENIS SMOOTH SCROLLING (Integrated with GSAP Ticker)
 // ═══════════════════════════════════════════════════════
-const lenis = new Lenis({ duration:1.2, easing:(t)=>Math.min(1,1.001-Math.pow(2,-10*t)), direction:'vertical', gestureDirection:'vertical', smooth:true, mouseMultiplier:1, smoothTouch:false, touchMultiplier:2, infinite:false });
-function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
-requestAnimationFrame(raf);
+const lenis = new Lenis({ 
+  duration: 1.2, 
+  easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), 
+  direction: 'vertical', 
+  gestureDirection: 'vertical', 
+  smooth: true, 
+  mouseMultiplier: 1, 
+  smoothTouch: false, 
+  touchMultiplier: 2, 
+  infinite: false 
+});
 
 gsap.registerPlugin(ScrollTrigger);
 lenis.on('scroll', ScrollTrigger.update);
-gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+
+gsap.ticker.add((time) => {
+  lenis.raf(time * 1000);
+});
 gsap.ticker.lagSmoothing(0);
 
 // ═══════════════════════════════════════════════════════

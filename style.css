@@ -158,6 +158,24 @@ button { font-family: var(--font); cursor: none; border: none; background: none;
   94%{opacity:1;transform:translateX(2px) skewX(1deg)}
   96%{opacity:0.9;transform:translateX(-1px)}
 }
+
+/* ═══ REVEAL ANIMATIONS ═══ */
+[data-reveal-tag], [data-reveal-title], [data-reveal-fade] {
+  opacity: 0;
+  will-change: transform, opacity;
+  transition: opacity 1.2s var(--ease-out), transform 1.2s var(--ease-out);
+}
+[data-reveal-tag] { transform: translateY(20px); transition-delay: 0.1s; }
+[data-reveal-title] { transform: translateY(30px); transition-delay: 0.2s; }
+[data-reveal-fade] { transform: scale(0.98); transition-delay: 0.3s; }
+
+[data-reveal-tag].revealed, 
+[data-reveal-title].revealed, 
+[data-reveal-fade].revealed {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
 .loader-progress-container {
   width: 280px; height: 3px; background: rgba(255,255,255,0.1);
   margin: 0 auto 1.5rem; overflow: hidden; border-radius: 2px;
