@@ -1018,12 +1018,15 @@ html.lenis{height:auto} .lenis.lenis-smooth{scroll-behavior:auto!important} .len
   .about-value-card{padding:1.5rem 0}
 
   /* ── Founders ── */
-  .founders-container{padding:4rem 5vw 0}
-  .founders-grid{grid-template-columns:repeat(2, 1fr);gap:1rem}
-  .founder-info{padding:1.5rem 1rem;margin-top:-30px}
-  .founder-name{font-size:clamp(16px,4vw,22px)}
-  .founder-role{font-size:10px; padding-bottom:1rem; margin-bottom:1rem;}
-  .founder-bio{font-size:12px; line-height:1.5; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;}
+  .founders-container{padding:3rem 5vw 0}
+  .founders-grid{grid-template-columns:repeat(2, 1fr);gap:0.75rem}
+  .founder-info{padding:1rem 0.75rem;margin-top:0; background:var(--bg-surface);}
+  .founder-name{font-size:14px; margin-bottom:0.25rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .founder-role{font-size:9px; padding-bottom:0.5rem; margin-bottom:0.5rem; letter-spacing:1px;}
+  .founder-bio{font-size:11px; line-height:1.4; display:-webkit-box; -webkit-line-clamp:4; -webkit-box-orient:vertical; overflow:hidden; margin-bottom:1rem;}
+  .founder-socials{gap:0.5rem; margin-top:0.5rem;}
+  .founder-socials .social-link{width:28px; height:28px;}
+  .founder-socials .social-link svg{width:14px; height:14px;}
   .leadership-philosophy{padding:2rem 1.5rem;margin-top:3rem}
   .philosophy-title{font-size:clamp(22px,6vw,32px)}
   .philosophy-intro{font-size:15px;margin-bottom:2rem}
