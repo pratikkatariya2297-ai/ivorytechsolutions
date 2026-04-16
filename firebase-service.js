@@ -111,3 +111,32 @@ export function dbListenActivities(callback) {
     callback(activities);
   });
 }
+
+/**
+ * Save Site Settings (Founders, General)
+ */
+export async function dbSaveSettings(type, settingsData) {
+  try {
+    const settingsRef = doc(db, 'settings', type);
+    await setDoc(settingsRef, {
+      ...settingsData,
+      updatedAt: serverTimestamp()
+    }, { merge: true });
+  } catch (err) {
+    console.error(`Firestore Settings Error (${type}):`, err);
+  }
+}
+
+/**
+ * LISTEN: Site Settings
+ */
+export function dbListenSettings(type, callback) {
+  const settingsRef = doc(db, 'settings', type);
+  return onSnapshot(settingsRef, (doc) => {
+    if (doc.exists()) {
+      callback(doc.data());
+    } else {
+      callback(null);
+    }
+  });
+}

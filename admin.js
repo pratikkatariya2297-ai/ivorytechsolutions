@@ -2,7 +2,7 @@
 //   IVORY TECH SOLUTIONS — ADMIN PORTAL LOGIC
 // ═══════════════════════════════════════════════════════
 
-import { dbListenSessions, dbListenLeads, dbListenActivities } from './firebase-service.js';
+import { dbListenSessions, dbListenLeads, dbListenActivities, dbSaveSettings, dbListenSettings } from './firebase-service.js';
 
 // Global Cloud Cache
 let cloudSessions = [];
@@ -649,48 +649,118 @@ try{ updateDashboardMetrics(); }catch(e){}
 });
 
 
-// Load Founder Social settings
+
+// ── FOUNDER SETTINGS (Cloud Sync) ─────────────────────
+
 function loadSettings() {
-    const socials = JSON.parse(localStorage.getItem('ivory_founder_socials') || '{}');
-    const inputs = ['pranav-fb', 'pranav-insta', 'pranav-linkedin', 'pratik-fb', 'pratik-insta', 'pratik-linkedin'];
-    inputs.forEach(id => {
-        const el = document.getElementById('setting-' + id);
-        if (el && socials[id]) {
-            el.value = (socials[id] !== '#') ? socials[id] : '';
+    // 1. Initial load from LocalStorage (fast)
+    const localSocials = JSON.parse(localStorage.getItem('ivory_founder_socials') || '{}');
+    applySettingsToUI(localSocials);
+
+    // 2. Real-time Sync from Firebase (Source of Truth)
+    dbListenSettings('founders', (data) => {
+        if (data) {
+            console.log('☁️ Founder Profiles Sync:', data);
+            localStorage.setItem('ivory_founder_socials', JSON.stringify(data));
+            applySettingsToUI(data);
+        }
+    });
+}
+
+function applySettingsToUI(data) {
+    const fields = [
+      'pranav-fb', 'pranav-insta', 'pranav-linkedin', 
+      'pratik-fb', 'pratik-insta', 'pratik-linkedin',
+      'role-pranav', 'role-pratik',
+      'bio-pranav', 'bio-pratik'
+    ];
+    
+    fields.forEach(f => {
+        const el = document.getElementById('setting-' + f) || document.getElementById('founder-' + f);
+        if (el && data[f]) {
+            el.value = (data[f] !== '#') ? data[f] : '';
+        }
+    });
+
+    // Handle Photos Previews
+    const photos = ['pranav', 'pratik'];
+    photos.forEach(p => {
+        const dataKey = `photo-${p}`;
+        if (data[dataKey]) {
+            const preview = document.getElementById(`founder-photo-${p}-preview`);
+            const hidden = document.getElementById(`founder-photo-${p}-data`);
+            if (preview) preview.innerHTML = `<img src="${data[dataKey]}" class="preview-thmb">`;
+            if (hidden) hidden.value = data[dataKey];
         }
     });
 }
 
 function initSettings() {
     loadSettings();
-    const saveBtn = document.getElementById('save-social-links-btn');
+
+    // Image Upload Listeners
+    handleImageUpload(
+        document.getElementById('founder-photo-pranav-input'), 
+        'founder-photo-pranav-preview', 
+        'founder-photo-pranav-data'
+    );
+    handleImageUpload(
+        document.getElementById('founder-photo-pratik-input'), 
+        'founder-photo-pratik-preview', 
+        'founder-photo-pratik-data'
+    );
+
+    const saveBtn = document.getElementById('save-profiles-btn');
     if (saveBtn) {
-        saveBtn.addEventListener('click', () => {
-            const inputs = ['pranav-fb', 'pranav-insta', 'pranav-linkedin', 'pratik-fb', 'pratik-insta', 'pratik-linkedin'];
-            const socials = {};
-            inputs.forEach(id => {
-                const el = document.getElementById('setting-' + id);
-                socials[id] = (el && el.value.trim()) ? el.value.trim() : '#';
+        saveBtn.addEventListener('click', async () => {
+            const fields = [
+              'pranav-fb', 'pranav-insta', 'pranav-linkedin', 
+              'pratik-fb', 'pratik-insta', 'pratik-linkedin'
+            ];
+            const profileFields = ['role-pranav', 'role-pratik', 'bio-pranav', 'bio-pratik'];
+            const photoFields = ['pranav', 'pratik'];
+
+            const settings = {};
+            
+            // Socials
+            fields.forEach(f => {
+                const el = document.getElementById('setting-' + f);
+                settings[f] = (el && el.value.trim()) ? el.value.trim() : '#';
             });
-            localStorage.setItem('ivory_founder_socials', JSON.stringify(socials));
+            
+            // Roles/Bios
+            profileFields.forEach(f => {
+                const el = document.getElementById('founder-' + f);
+                settings[f] = (el && el.value.trim()) ? el.value.trim() : '';
+            });
+
+            // Photos
+            photoFields.forEach(p => {
+                const el = document.getElementById(`founder-photo-${p}-data`);
+                if (el && el.value) settings[`photo-${p}`] = el.value;
+            });
+
+            // Save to Cloud & Local
+            await dbSaveSettings('founders', settings);
+            localStorage.setItem('ivory_founder_socials', JSON.stringify(settings));
             
             // UI Feedback
             const originalText = saveBtn.innerText;
-            saveBtn.innerText = 'Saved Successfully!';
+            saveBtn.innerText = '✅ Profiles Updated Globally!';
             saveBtn.style.background = '#00c853';
             saveBtn.style.color = '#000';
             setTimeout(() => {
                 saveBtn.innerText = originalText;
                 saveBtn.style.background = '';
                 saveBtn.style.color = '';
-            }, 2000);
+            }, 3000);
         });
     }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Other initializations...
-    setTimeout(initSettings, 500); // Initialize settings bindings
+    // Wait for other initializations
+    setTimeout(initSettings, 500);
 });
 
 

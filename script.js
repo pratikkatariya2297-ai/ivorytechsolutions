@@ -3,7 +3,7 @@
    Editorial Noir × AI-Powered × Rich Animations
    ═══════════════════════════════════════════════════════ */
 
-import { dbSaveSession, dbLogActivity, dbSaveLead } from './firebase-service.js';
+import { dbSaveSession, dbLogActivity, dbSaveLead, dbListenSettings } from './firebase-service.js';
 
 
 // ═══════════════════════════════════════════════════════
@@ -1362,28 +1362,70 @@ document.addEventListener('DOMContentLoaded', () => {
 // (Audio is initialised inside the page loader completion callback above)
 
 
-// Apply Founder Social Links dynamically
+// Apply Founder Social Links dynamically (Real-time Cloud Sync)
 function loadFounderSocials() {
+    // 1. Load from cache (Local Storage) for immediate view
     const socials = JSON.parse(localStorage.getItem('ivory_founder_socials') || '{}');
-    const defaultSocials = {
-        'pranav-fb': '#', 'pranav-insta': '#', 'pranav-linkedin': '#',
-        'pratik-fb': '#', 'pratik-insta': '#', 'pratik-linkedin': '#'
-    };
-    
-    // Merge defaults with saved
-    const currentSocials = { ...defaultSocials, ...socials };
-    
-    // Apply
-    for (const [id, url] of Object.entries(currentSocials)) {
+    applyFounderSettings(socials);
+
+    // 2. Subscribe to Firebase updates
+    dbListenSettings('founders', (data) => {
+        if (data) {
+            console.log('?? Syncing Founder Profiles...');
+            localStorage.setItem('ivory_founder_socials', JSON.stringify(data));
+            applyFounderSettings(data);
+        }
+    });
+}
+
+function applyFounderSettings(data) {
+    if (!data) return;
+
+    // A. Social Links
+    const socialIds = ['pranav-fb', 'pranav-insta', 'pranav-linkedin', 'pratik-fb', 'pratik-insta', 'pratik-linkedin'];
+    socialIds.forEach(id => {
         const el = document.getElementById(id);
         if (el) {
-            el.href = url && url.trim() !== '' ? url : '#';
-            if(url && url.trim() !== '' && url !== '#'){
-                 el.target = '_blank';
-            } else {
-                 el.removeAttribute('target');
+            const url = data[id];
+            el.href = (url && url.trim() !== '' && url !== '#') ? url : '#';
+            if (el.href !== '#') el.target = '_blank';
+            else el.removeAttribute('target');
+        }
+    });
+
+    // B. Photos (Direct ID updates)
+    const pranavPhoto = data['photo-pranav'];
+    const pratikPhoto = data['photo-pratik'];
+    if (pranavPhoto) {
+        const pImg = document.getElementById('founder-img-pranav');
+        if (pImg) pImg.src = pranavPhoto;
+    }
+    if (pratikPhoto) {
+        const ptImg = document.getElementById('founder-img-pratik');
+        if (ptImg) ptImg.src = pratikPhoto;
+    }
+
+    // C. Roles & Bio (Searching within founder cards)
+    const founders = ['pranav', 'pratik'];
+    founders.forEach(p => {
+        const cardTitle = (p === 'pranav') ? 'Pranav Gugale' : 'Pratik Katariya';
+        const cards = document.querySelectorAll('.founder-card');
+        let myCard = null;
+        cards.forEach(c => { 
+            const nameEl = c.querySelector('.founder-name');
+            if(nameEl && nameEl.innerText.includes(cardTitle)) myCard = c; 
+        });
+
+        if (myCard) {
+            if (data[ole-]) {
+                const roleEl = myCard.querySelector('.founder-role');
+                if (roleEl) roleEl.innerText = data[ole-];
+            }
+            if (data[io-]) {
+                const bioEl = myCard.querySelector('.founder-bio');
+                if (bioEl) bioEl.innerText = data[io-];
             }
         }
-    }
+    });
 }
 document.addEventListener('DOMContentLoaded', loadFounderSocials);

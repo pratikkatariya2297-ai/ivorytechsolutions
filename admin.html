@@ -315,13 +315,58 @@
         <header class="tab-header"><h2>Site Settings</h2><p class="sub-header">Manage global site configurations like founder social links.</p></header>
         
         <div class="border-card">
+          <h3>Founder Profiles</h3>
+          <p style="margin-bottom: 2rem; color: var(--text-muted);">Update photos, names, and bios here. Images will be optimized before saving.</p>
+          
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+            <!-- PRANAV -->
+            <div class="panel">
+              <h4>Pranav Gugale</h4>
+              <div class="image-uploader" style="margin-top:1rem; margin-bottom:1rem;">
+                <label>Profile Photo</label>
+                <input type="file" id="founder-photo-pranav-input" accept="image/*">
+                <div id="founder-photo-pranav-preview" class="img-previews"></div>
+                <input type="hidden" id="founder-photo-pranav-data">
+              </div>
+              <div class="form-row">
+                <label>Professional Role</label>
+                <input type="text" id="founder-role-pranav" placeholder="e.g. CEO" class="contact-input" style="width:100%">
+              </div>
+              <div class="form-row">
+                <label>Biography</label>
+                <textarea id="founder-bio-pranav" rows="4" placeholder="Brief bio..." class="contact-input" style="width:100%; height:auto;"></textarea>
+              </div>
+            </div>
+
+            <!-- PRATIK -->
+            <div class="panel">
+              <h4>Pratik Katariya</h4>
+              <div class="image-uploader" style="margin-top:1rem; margin-bottom:1rem;">
+                <label>Profile Photo</label>
+                <input type="file" id="founder-photo-pratik-input" accept="image/*">
+                <div id="founder-photo-pratik-preview" class="img-previews"></div>
+                <input type="hidden" id="founder-photo-pratik-data">
+              </div>
+              <div class="form-row">
+                <label>Professional Role</label>
+                <input type="text" id="founder-role-pratik" placeholder="e.g. CFO" class="contact-input" style="width:100%">
+              </div>
+              <div class="form-row">
+                <label>Biography</label>
+                <textarea id="founder-bio-pratik" rows="4" placeholder="Brief bio..." class="contact-input" style="width:100%; height:auto;"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="border-card" style="margin-top: 2rem;">
           <h3>Founder Social Links</h3>
           <p style="margin-bottom: 2rem; color: var(--text-muted);">Leave blank to hide or disable a social link.</p>
           
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
             <!-- PRANAV -->
             <div class="panel">
-              <h4>Pranav Gugale</h4>
+              <h4>Socials (Pranav)</h4>
               <div class="form-row" style="margin-top: 1rem;">
                 <label>Facebook URL</label>
                 <input type="url" id="setting-pranav-fb" placeholder="https://facebook.com/..." class="contact-input" style="width:100%">
@@ -338,7 +383,7 @@
 
             <!-- PRATIK -->
             <div class="panel">
-              <h4>Pratik Katariya</h4>
+              <h4>Socials (Pratik)</h4>
               <div class="form-row" style="margin-top: 1rem;">
                 <label>Facebook URL</label>
                 <input type="url" id="setting-pratik-fb" placeholder="https://facebook.com/..." class="contact-input" style="width:100%">
@@ -354,8 +399,8 @@
             </div>
           </div>
 
-          <div style="margin-top: 2rem;">
-            <button id="save-social-links-btn" class="admin-btn">Save Social Links</button>
+          <div style="margin-top: 2rem; display:flex; gap:1rem;">
+            <button id="save-profiles-btn" class="admin-btn">Save All Profile Updates</button>
           </div>
         </div>
       </section>
