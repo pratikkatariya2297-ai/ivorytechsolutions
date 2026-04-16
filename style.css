@@ -1018,10 +1018,11 @@ html.lenis{height:auto} .lenis.lenis-smooth{scroll-behavior:auto!important} .len
 
   /* ── Founders ── */
   .founders-container{padding:4rem 5vw 0}
-  .founders-grid{grid-template-columns:1fr;gap:2rem}
-  .founder-info{padding:1.5rem;margin-top:-40px}
-  .founder-name{font-size:clamp(20px,5vw,28px)}
-  .founder-bio{font-size:14px;line-height:1.6}
+  .founders-grid{grid-template-columns:repeat(2, 1fr);gap:1rem}
+  .founder-info{padding:1.5rem 1rem;margin-top:-30px}
+  .founder-name{font-size:clamp(16px,4vw,22px)}
+  .founder-role{font-size:10px; padding-bottom:1rem; margin-bottom:1rem;}
+  .founder-bio{font-size:12px; line-height:1.5; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;}
   .leadership-philosophy{padding:2rem 1.5rem;margin-top:3rem}
   .philosophy-title{font-size:clamp(22px,6vw,32px)}
   .philosophy-intro{font-size:15px;margin-bottom:2rem}
@@ -1447,9 +1448,6 @@ html.lenis{height:auto} .lenis.lenis-smooth{scroll-behavior:auto!important} .len
 }
 
 @media (max-width: 1024px) {
-  .founders-grid {
-    grid-template-columns: 1fr;
-  }
 }
 
 @media (max-width: 768px) {
