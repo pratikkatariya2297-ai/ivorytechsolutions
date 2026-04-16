@@ -772,8 +772,8 @@ h1,h2,h3,h4 { font-family: var(--font); font-weight: 900; text-transform: upperc
 }
 @media(max-width:640px) {
   .about-grid { padding: 0 6vw; }
-  .about-stat-col { flex-direction: column; }
-  .about-big-stat { border-right: none; border-bottom: 1px solid var(--border); padding: 1.5rem 0; }
+  .about-stat-col { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
+  .about-big-stat { border-right: none; border-bottom: 1px solid var(--border); padding: 1rem 0; }
   .about-values-col { padding-left: 0; }
 }
 
@@ -1010,10 +1010,11 @@ html.lenis{height:auto} .lenis.lenis-smooth{scroll-behavior:auto!important} .len
   /* ── About ── */
   .about-section{padding:5rem 0}
   .about-grid{padding:0 5vw}
-  .about-stat-col{flex-direction:column}
-  .about-big-stat{border-right:none;border-bottom:1px solid var(--border);padding:1.5rem 0}
-  .about-big-num{font-size:clamp(40px,10vw,64px)}
-  .about-values-col{padding-left:0}
+  .about-stat-col{display:grid; grid-template-columns:repeat(2, 1fr); gap:1rem; border-right:none; padding-bottom:2rem;}
+  .about-big-stat{border-right:none; border-bottom:1px solid var(--border); padding:1rem 0;}
+  .about-big-stat:nth-child(3){grid-column: span 2; border-bottom:none;}
+  .about-big-num{font-size:clamp(32px,8vw,48px)}
+  .about-values-col{padding-left:0; border-top:1px solid var(--border); padding-top:2rem;}
   .about-value-card{padding:1.5rem 0}
 
   /* ── Founders ── */
