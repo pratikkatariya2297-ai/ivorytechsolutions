@@ -796,6 +796,12 @@ function addToCart(service) {
     cart.push(service);
     localStorage.setItem(CART_KEY, JSON.stringify(cart));
     updateCartUI();
+    
+    // Log Activity for Analytics
+    if (window.ivoryAnalytics && window.ivoryAnalytics.logActivity) {
+      window.ivoryAnalytics.logActivity('cart_add', { service });
+    }
+
     const cartBadge = document.getElementById('cart-badge');
     if (cartBadge && typeof gsap !== 'undefined') {
       gsap.fromTo(cartBadge, { scale: 1.5 }, { scale: 1, duration: 0.4, ease: 'back.out(1.7)' });
@@ -1122,7 +1128,9 @@ document.addEventListener('DOMContentLoaded', () => {
         inputs.forEach(input => { if(input.type==='text')leadObj.name=input.value; else if(input.type==='email')leadObj.email=input.value; });
         
         // ── Cloud Save (Firebase) ──
-        dbSaveLead(leadObj);
+        if (typeof dbSaveLead === 'function') {
+          dbSaveLead(leadObj);
+        }
         
         // ── Local Fallback ──
         const leads = JSON.parse(localStorage.getItem('ivory_leads')||'[]');
@@ -1227,7 +1235,11 @@ document.addEventListener('DOMContentLoaded', () => {
     sessionData.lastActive = new Date().toISOString();
     
     // ── Cloud Save (Firebase) ──
-    dbSaveSession(sessionId, sessionData);
+    if (typeof dbSaveSession === 'function') {
+      dbSaveSession(sessionId, sessionData);
+    } else {
+      console.warn('Firebase Service: dbSaveSession not available. Running in local mode.');
+    }
 
     // ── Local Fallback ──
     const sessions = JSON.parse(localStorage.getItem(SESSION_KEY) || '[]');
@@ -1247,8 +1259,13 @@ document.addEventListener('DOMContentLoaded', () => {
       page: window.location.pathname
     };
 
+    // Expose to window for global access
+    window.ivoryAnalytics = { logActivity };
+
     // ── Cloud Save (Firebase) ──
-    dbLogActivity(event);
+    if (typeof dbLogActivity === 'function') {
+      dbLogActivity(event);
+    }
 
     // ── Local Fallback ──
     const activities = JSON.parse(localStorage.getItem(ACTIVITY_KEY) || '[]');
@@ -1256,6 +1273,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (activities.length > 500) activities.splice(0, activities.length - 500);
     localStorage.setItem(ACTIVITY_KEY, JSON.stringify(activities));
   }
+  
+  // Make logActivity globally accessible immediately
+  window.ivoryAnalytics = { logActivity, sessionId };
 
 
   // ── IP & Geolocation (free API) ──
@@ -1299,6 +1319,15 @@ document.addEventListener('DOMContentLoaded', () => {
         href: target.href || null,
         class: target.className.substring(0, 60)
       });
+
+      // Special tracking for Interest
+      if (target.classList.contains('service-card') || target.closest('.service-card')) {
+        const title = target.querySelector('.service-title')?.innerText || target.closest('.service-card')?.querySelector('.service-title')?.innerText;
+        logActivity('service_interest', { service: title || 'Unknown Service' });
+      }
+      if (target.classList.contains('portfolio-item') || target.closest('.portfolio-item') || target.classList.contains('website-card') || target.closest('.website-card')) {
+        logActivity('portfolio_view', { item: target.textContent.trim().substring(0,30) });
+      }
     }
   });
 
@@ -1359,23 +1388,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
 })();
 
-// (Audio is initialised inside the page loader completion callback above)
-
 
 // Apply Founder Social Links dynamically (Real-time Cloud Sync)
 function loadFounderSocials() {
-    // 1. Load from cache (Local Storage) for immediate view
     const socials = JSON.parse(localStorage.getItem('ivory_founder_socials') || '{}');
     applyFounderSettings(socials);
 
-    // 2. Subscribe to Firebase updates
-    dbListenSettings('founders', (data) => {
-        if (data) {
-            console.log('?? Syncing Founder Profiles...');
-            localStorage.setItem('ivory_founder_socials', JSON.stringify(data));
-            applyFounderSettings(data);
-        }
-    });
+    if (typeof dbListenSettings === 'function') {
+        dbListenSettings('founders', (data) => {
+            if (data) {
+                console.log('🔗 Syncing Founder Profiles...');
+                localStorage.setItem('ivory_founder_socials', JSON.stringify(data));
+                applyFounderSettings(data);
+            }
+        });
+    } else {
+        console.warn('Firebase Service: dbListenSettings not available. Syncing disabled.');
+    }
 }
 
 function applyFounderSettings(data) {
@@ -1417,13 +1446,16 @@ function applyFounderSettings(data) {
         });
 
         if (myCard) {
-            if (data[ole-]) {
+            const roleKey = `role-${p}`;
+            const bioKey = `bio-${p}`;
+
+            if (data[roleKey]) {
                 const roleEl = myCard.querySelector('.founder-role');
-                if (roleEl) roleEl.innerText = data[ole-];
+                if (roleEl) roleEl.innerText = data[roleKey];
             }
-            if (data[io-]) {
+            if (data[bioKey]) {
                 const bioEl = myCard.querySelector('.founder-bio');
-                if (bioEl) bioEl.innerText = data[io-];
+                if (bioEl) bioEl.innerText = data[bioKey];
             }
         }
     });
