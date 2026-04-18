@@ -536,10 +536,10 @@ h1,h2,h3,h4 { font-family: var(--font); font-weight: 900; text-transform: upperc
 }
 
 /* ═══ HERO ═══ */
-.hero { min-height:100vh; display:flex; flex-direction:column; justify-content:flex-start; padding:25vh clamp(5vw, 15vw, 15vw) 10vh; position:relative; z-index:1; overflow:hidden; }
-.hero-heading-wrapper { overflow:hidden; }
-.hero-heading { font-size:clamp(42px, 8vw, 82px); line-height:1; letter-spacing:-0.02em; position:relative; z-index:2; max-width: 70%; }
-.hero-line { display:block; overflow:hidden; }
+.hero { min-height:100vh; display:grid; grid-template-columns:1fr 1fr; grid-template-rows:auto 1fr; align-items:end; padding:22vh clamp(5vw, 12vw, 15vw) 10vh; gap:4rem 2rem; position:relative; z-index:1; overflow:hidden; }
+.hero-heading-wrapper { grid-column:1 / -1; align-self:start; width:100%; overflow:hidden; }
+.hero-heading { font-size:clamp(42px, 8vw, 92px); line-height:1; letter-spacing:-0.02em; position:relative; z-index:2; width:100%; }
+.hero-line { display:block; overflow:visible; }
 .hero-line-1 { margin-bottom:0.15em; }
 .char-wrap { display:inline-block; opacity:0; transform:translateY(100%); }
 .typing-container { display:inline-flex; align-items:baseline; }
@@ -561,8 +561,10 @@ h1,h2,h3,h4 { font-family: var(--font); font-weight: 900; text-transform: upperc
 
 /* ── Hero Video Container (GDrive Embed) ── */
 .hero-video-container {
-  position: absolute; left: 15vw; bottom: 10vh;
-  width: clamp(280px, 35vw, 480px);
+  grid-column: 1 / 2;
+  position: relative !important; left: auto !important; bottom: auto !important; top: auto; right: auto;
+  width: 100%;
+  max-width: 480px;
   aspect-ratio: 16/9;
   height: auto;
   border-radius: 8px; overflow: hidden;
@@ -583,7 +585,7 @@ h1,h2,h3,h4 { font-family: var(--font); font-weight: 900; text-transform: upperc
 }
 .hero-video-container iframe { width: 100%; height: 100%; border: none; }
 
-.hero-subtext-container { margin-top:2.5rem; max-width:440px; align-self:flex-end; opacity:0; transform:translateY(30px); }
+.hero-subtext-container { grid-column: 2 / 3; justify-self: flex-end; align-self: flex-end; margin-top: 0; max-width: 440px; opacity:0; transform:translateY(30px); }
 .hero-subtext { font-size:13px; font-weight:500; line-height:1.6; text-align:justify; letter-spacing:0.06em; color:var(--text-muted); }
 .hero-cta {
   display:inline-flex; align-items:center; gap:10px; margin-top:2rem;
@@ -595,7 +597,7 @@ h1,h2,h3,h4 { font-family: var(--font); font-weight: 900; text-transform: upperc
 .hero-cta::before { content:''; position:absolute; inset:0; background:var(--text); transform:scaleX(0); transform-origin:right; transition:transform 0.4s var(--ease-out); z-index:-1; }
 .hero-cta:hover::before { transform:scaleX(1); transform-origin:left; }
 .hero-cta:hover { color:var(--bg); box-shadow:0 0 30px rgba(255,255,255,0.1); }
-.scroll-indicator { position:absolute; bottom:3rem; left:15vw; display:flex; align-items:center; gap:12px; opacity:0; animation:fadeInUp 1s ease 2s forwards; }
+.scroll-indicator { position:absolute; bottom:2rem; left:50%; transform:translateX(-50%); display:flex; align-items:center; gap:12px; opacity:0; animation:fadeInUp 1s ease 2s forwards; z-index:5; }
 .scroll-text { font-size:11px; font-weight:500; letter-spacing:0.2em; text-transform:uppercase; color:var(--text-muted); }
 .scroll-line { width:60px; height:1px; background:var(--border); position:relative; overflow:hidden; }
 .scroll-line::after { content:''; position:absolute; top:0; left:0; width:100%; height:100%; background:var(--text); animation:scrollLineMove 2s ease-in-out infinite; }
@@ -1566,29 +1568,26 @@ html.lenis{height:auto} .lenis.lenis-smooth{scroll-behavior:auto!important} .len
 
 /* ═══ RESPONSIVE OVERRIDES (Unified Cascade) ═══ */
 
+/* ═══ RESPONSIVE OVERRIDES (Unified Cascade) ═══ */
+
 @media (max-width: 1200px) {
-  .hero { justify-content: flex-start; padding: 20vh 10vw 8vh; }
-  .hero-heading { font-size: clamp(38px, 8vw, 72px); max-width: 75%; }
+  .hero { padding: 20vh 8vw 10vh; gap:3rem 2rem; }
+  .hero-heading { font-size: clamp(38px, 8vw, 76px); width:100%; }
   .hero-video-container { 
-    left: 10vw; 
-    bottom: 8vh; 
-    width: clamp(280px, 30vw, 360px);
-    z-index: 10;
+    max-width: 400px;
   }
-  .hero-ai-badge { align-self: flex-end; width: fit-content; }
 }
 
 /* ── REFLOW TABLET/DESKTOP (Narrow) ── */
 @media (max-width: 1100px) {
   .hero { 
-    justify-content: flex-start; 
-    padding: 20vh 8vw 10vh; 
-    height: auto; 
-    min-height: 100svh; 
     display: flex;
     flex-direction: column;
-    overflow: visible;
-    isolation: isolate;
+    justify-content: flex-start; 
+    align-items: center;
+    padding: 18vh 6vw 10vh; 
+    min-height: 100svh; height: auto;
+    overflow: visible; isolation: isolate;
   }
   .hero-heading { 
     font-size: clamp(38px, 10vw, 76px); 
