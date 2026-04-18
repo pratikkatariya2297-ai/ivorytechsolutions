@@ -308,6 +308,9 @@ document.addEventListener('DOMContentLoaded', () => {
           }
           if (soundBtn) soundBtn.classList.add('visible');
 
+          // Trigger the cinematic hero reveal animation
+          startHeroReveal();
+
           schedulLeadPopup();
         }, 300);
       }
@@ -951,27 +954,60 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
 
-  // ── HERO ENTRANCE ──
-  const heroTimeline = gsap.timeline({ delay: 0.3 });
-  const charWrap = document.querySelector('.char-wrap');
-  if (charWrap) {
-    const text = charWrap.getAttribute('data-text');
-    charWrap.textContent = '';
-    [...text].forEach(char => {
-      const span = document.createElement('span');
-      span.textContent = char === ' ' ? '\u00A0' : char;
-      span.style.display = 'inline-block'; span.style.opacity = '0';
-      span.style.transform = 'translateY(100%) rotateX(-90deg)';
-      span.className = 'hero-char';
-      charWrap.appendChild(span);
-    });
-    charWrap.style.opacity = '1'; charWrap.style.transform = 'none';
-    heroTimeline.to('.hero-char', { y:0, rotateX:0, opacity:1, duration:0.8, stagger:0.04, ease:'power4.out' });
-  }
-  heroTimeline.call(() => { typeEffect(); }, null, '+=0.3');
-  if (document.querySelector('.hero-subtext-container')) {
-    heroTimeline.to('.hero-subtext-container', { y:0, opacity:1, duration:1.2, ease:'power4.out' }, '-=0.6');
-  }
+  // ── START HERO REVEAL (Called when loader finishes) ──
+  window.startHeroReveal = function() {
+    const heroTimeline = gsap.timeline({ delay: 0.2 });
+    const charWrap = document.querySelector('.char-wrap');
+    
+    if (charWrap) {
+      const text = charWrap.getAttribute('data-text');
+      charWrap.textContent = '';
+      [...text].forEach(char => {
+        const span = document.createElement('span');
+        span.textContent = char === ' ' ? '\u00A0' : char;
+        span.style.display = 'inline-block'; 
+        span.style.opacity = '0';
+        span.style.transform = 'translateY(100%) rotateX(-90deg)';
+        span.className = 'hero-char';
+        charWrap.appendChild(span);
+      });
+      charWrap.style.opacity = '1'; 
+      charWrap.style.transform = 'none';
+      
+      // 1. Heading chars reveal
+      heroTimeline.to('.hero-char', { 
+        y: 0, 
+        rotateX: 0, 
+        opacity: 1, 
+        duration: 0.8, 
+        stagger: 0.04, 
+        ease: 'power4.out' 
+      });
+    }
+
+    // 2. Video Container reveal
+    if (document.querySelector('.hero-video-container')) {
+      heroTimeline.to('.hero-video-container', {
+        opacity: 1,
+        y: 0,
+        duration: 1.2,
+        ease: 'power3.out'
+      }, '-=0.6');
+    }
+
+    // 3. Subtext reveal
+    if (document.querySelector('.hero-subtext-container')) {
+      heroTimeline.to('.hero-subtext-container', { 
+        y: 0, 
+        opacity: 1, 
+        duration: 1.2, 
+        ease: 'power4.out' 
+      }, '-=0.8');
+    }
+
+    // 4. Start typing effect after heading is partially revealed
+    heroTimeline.call(() => { typeEffect(); }, null, '+=0.2');
+  };
 
 
   // ── AI ACCURACY RING ANIMATION ──

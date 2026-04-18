@@ -534,6 +534,8 @@ h1,h2,h3,h4 { font-family: var(--font); font-weight: 900; text-transform: upperc
   border: 1px solid rgba(255,255,255,0.08);
   z-index: 10;
   backdrop-filter: blur(10px);
+  opacity: 0;
+  transform: translateY(30px);
 }
 .hero-video-container::after {
   content: '';
