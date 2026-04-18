@@ -277,15 +277,18 @@ document.addEventListener('DOMContentLoaded', () => {
           document.body.classList.remove('loader-active');
           cancelAnimationFrame(loaderAnimId);
 
-          // Skip forced scroll to top to prevent user losing their scroll position
+          // Force scroll to top when loader finishes
+          window.scrollTo(0, 0);
+          if (typeof lenis !== 'undefined') lenis.scrollTo(0, { immediate: true });
+
           if (!sessionStorage.getItem('ivory_site_entered')) {
              sessionStorage.setItem('ivory_site_entered', 'true');
           }
 
           // ── AUTOPLAY AUDIO (user gesture already given at "Enter") ──
           if (bgAudio) {
-            const savedTime = sessionStorage.getItem('ivory_audio_time');
-            if (savedTime) bgAudio.currentTime = parseFloat(savedTime);
+            // Restart audio from beginning
+            bgAudio.currentTime = 0;
             
             bgAudio.play().then(() => {
               if (soundBtn) soundBtn.classList.add('playing');
@@ -912,21 +915,16 @@ document.addEventListener('DOMContentLoaded', () => {
     _bgAudio.volume = 0.5;
     // Restore audio stat from sessionStorage
     const wasPlaying = sessionStorage.getItem('ivory_audio_playing');
-    const savedTime = sessionStorage.getItem('ivory_audio_time');
     
     if (wasPlaying === 'true') {
-      if (savedTime) _bgAudio.currentTime = parseFloat(savedTime);
+      _bgAudio.currentTime = 0;
       _bgAudio.play().then(() => {
         if (_soundBtn) _soundBtn.classList.add('playing');
       }).catch(e => console.warn('Autoplay blocked crossing to new page'));
     }
 
-    // Continuously save exact timestamp
-    setInterval(() => {
-      if (!_bgAudio.paused) {
-        sessionStorage.setItem('ivory_audio_time', _bgAudio.currentTime);
-      }
-    }, 250);
+    // Clear saved time on every reload to ensure it restarts
+    sessionStorage.removeItem('ivory_audio_time');
   }
 
   if (_soundBtn && _bgAudio) {
