@@ -63,25 +63,22 @@ document.addEventListener('DOMContentLoaded', () => {
   const splash    = document.getElementById('enter-splash');
   const enterBtn  = document.getElementById('enter-btn');
   const loader    = document.getElementById('page-loader');
-  const bar       = document.getElementById('loader-progress-bar');
-  const pct       = document.getElementById('loader-percentage');
   const bgAudio   = document.getElementById('bg-audio');
-  const soundBtn  = document.getElementById('sound-toggle');
-
-  const tagline   = document.getElementById('loader-tagline');
+  const brand     = document.querySelector('.enter-brand');
+  const brandSub  = document.querySelector('.enter-brand-sub');
 
   if (!loader) return;
 
   if (!splash || !enterBtn) {
-    // If no splash exists (e.g., student.html), start loader immediately
     startLoader();
   } else {
-    // ── Animate realistic deep universe on the enter splash canvas ──
     const ec = document.getElementById('enter-particles');
     if (ec) {
       const ectx = ec.getContext('2d');
       let width, height, centerZ;
       let eAnimId;
+      let isWarping = false;
+      let currentSpeed = 2.0;
 
       function resize() {
         const dpr = window.devicePixelRatio || 1;
@@ -91,115 +88,144 @@ document.addEventListener('DOMContentLoaded', () => {
         ec.height = height * dpr;
         ec.style.width = width + 'px';
         ec.style.height = height + 'px';
-        ectx.setTransform(dpr, 0, 0, dpr, 0, 0); // Scale rendering context for ultra-crisp Retina/4k edge rendering
+        ectx.setTransform(dpr, 0, 0, dpr, 0, 0);
         centerZ = (width < height ? height : width) * 0.8;
       }
       resize();
       window.addEventListener('resize', resize);
       
-      const numStars = 1400; // Increased density for deeper realism
+      const numStars = 1200;
       const stars = [];
-      const colors = ['255, 255, 255', '210, 235, 255', '245, 250, 255', '255, 240, 220']; // White, Ice Blue, Bright White, Warm Gold
+      const colors = ['255, 255, 255', '200, 230, 255', '240, 250, 255'];
       for(let i=0; i<numStars; i++) {
           stars.push({
-              x: Math.random() * width * 2 - width,
-              y: Math.random() * height * 2 - height,
+              x: Math.random() * width * 3 - width * 1.5,
+              y: Math.random() * height * 3 - height * 1.5,
               z: Math.random() * centerZ,
-              o: Math.random() * 0.8 + 0.2,
-              size: Math.random() * 1.2 + 0.3,
-              color: colors[Math.floor(Math.random() * colors.length)],
-              hasGlow: Math.random() > 0.85 // 15% of stars are massive/glowing properly
+              o: Math.random() * 0.7 + 0.3,
+              size: Math.random() * 1.1 + 0.3,
+              color: colors[Math.floor(Math.random() * colors.length)]
           });
       }
 
-      let speed = 2.0; // Warp speed
-      
       let mx = width / 2;
       let my = height / 2;
+      let mouseX = 0, mouseY = 0;
+
       document.addEventListener('mousemove', e => { 
-        mx = e.clientX; 
-        my = e.clientY; 
+        mouseX = e.clientX; 
+        mouseY = e.clientY; 
+        
+        // Update CSS variables for the global glow
+        document.documentElement.style.setProperty('--mx', e.clientX + 'px');
+        document.documentElement.style.setProperty('--my', e.clientY + 'px');
+
+        // Apply magnetic effect to button
+        const btnRect = enterBtn.getBoundingClientRect();
+        const btnX = btnRect.left + btnRect.width / 2;
+        const btnY = btnRect.top + btnRect.height / 2;
+        const distX = e.clientX - btnX;
+        const distY = e.clientY - btnY;
+        const distance = Math.hypot(distX, distY);
+
+        if (distance < 150) {
+          const strength = 1 - (distance / 150);
+          gsap.to(enterBtn, {
+            x: distX * 0.3 * strength,
+            y: distY * 0.3 * strength,
+            duration: 0.4,
+            ease: 'power2.out'
+          });
+          gsap.to(brand, {
+            x: distX * 0.05 * strength,
+            y: distY * 0.05 * strength,
+            duration: 0.8,
+            ease: 'power2.out'
+          });
+        } else {
+          gsap.to([enterBtn, brand], { x: 0, y: 0, duration: 1.2, ease: 'elastic.out(1, 0.3)' });
+        }
       });
 
       function drawEnterUniverse() {
-        // Deep space tail effect
-        ectx.fillStyle = 'rgba(3, 3, 5, 0.4)';
+        ectx.fillStyle = isWarping ? 'rgba(0, 0, 0, 0.2)' : 'rgba(2, 2, 4, 0.5)';
         ectx.fillRect(0, 0, width, height);
         
         const cx = width / 2;
         const cy = height / 2;
         
-        // Mouse drift rotation disabled (constant camera)
-        const rotX = 0;
-        const rotY = 0;
-        const cosX = Math.cos(rotX), sinX = Math.sin(rotX);
-        const cosY = Math.cos(rotY), sinY = Math.sin(rotY);
-
         stars.forEach(star => {
-          star.z -= speed;
+          star.z -= currentSpeed;
           if (star.z <= 0) {
               star.z = centerZ;
-              star.x = Math.random() * width * 2 - width;
-              star.y = Math.random() * height * 2 - height;
+              star.x = Math.random() * width * 3 - width * 1.5;
+              star.y = Math.random() * height * 3 - height * 1.5;
           }
 
-          // 3D Rotation
-          let tempY = star.y * cosX - star.z * sinX;
-          let tempZ = star.y * sinX + star.z * cosX;
-          let tempX = star.x * cosY + tempZ * sinY;
-          tempZ = -star.x * sinY + tempZ * cosY;
-          
-          star.x = tempX;
-          star.y = tempY;
-
-          // Perspective Projection
           const scale = centerZ / star.z;
           const px = cx + star.x * scale;
           const py = cy + star.y * scale;
-          // Dynamically scale but limit maximum sharpness point
-          const size = Math.max(0.1, star.size * (1 - star.z / centerZ) * 2.2);
+          const size = star.size * scale * 0.12;
 
           if (px >= 0 && px <= width && py >= 0 && py <= height) {
-              const depthAlpha = 1 - (star.z / centerZ);
-              // Subtler fade-in avoids pop-in
-              const op = Math.min(1, depthAlpha * 2.5) * star.o;
+              const op = (1 - (star.z / centerZ)) * star.o;
               
-              // Draw Outer Photorealistic Halo (Scatter)
-              if (size > 0.8 && star.hasGlow) {
-                  ectx.beginPath();
-                  ectx.arc(px, py, size * 4, 0, Math.PI * 2);
-                  ectx.fillStyle = `rgba(${star.color}, ${op * 0.15})`;
-                  ectx.fill();
+              if (isWarping) {
+                // Draw warp streaks
+                const tailX = px - (px - cx) * 0.15;
+                const tailY = py - (py - cy) * 0.15;
+                ectx.beginPath();
+                ectx.moveTo(px, py);
+                ectx.lineTo(tailX, tailY);
+                ectx.strokeStyle = `rgba(${star.color}, ${op})`;
+                ectx.lineWidth = size * 2;
+                ectx.lineCap = 'round';
+                ectx.stroke();
+              } else {
+                ectx.beginPath();
+                ectx.arc(px, py, size, 0, Math.PI * 2);
+                ectx.fillStyle = `rgba(${star.color}, ${op})`;
+                ectx.fill();
               }
-
-              // Draw Inner Dense Core
-              ectx.beginPath();
-              ectx.arc(px, py, size, 0, Math.PI * 2);
-              ectx.fillStyle = `rgba(${star.color}, ${op})`;
-              ectx.fill();
           }
         });
         eAnimId = requestAnimationFrame(drawEnterUniverse);
       }
       drawEnterUniverse();
+
+      enterBtn.addEventListener('click', () => {
+        if (isWarping) return;
+        isWarping = true;
+        
+        // JUMP TO HYPERSPACE
+        gsap.to({ val: currentSpeed }, {
+          val: 80,
+          duration: 1.2,
+          ease: 'power2.in',
+          onUpdate: function() { currentSpeed = this.targets()[0].val; }
+        });
+
+        if (bgAudio) {
+          bgAudio.volume = 0.4;
+          bgAudio.load();
+        }
+
+        gsap.to(splash, {
+          opacity: 0,
+          scale: 1.5,
+          duration: 1.4,
+          ease: 'power4.inOut',
+          delay: 0.6,
+          onComplete: () => {
+             splash.style.display = 'none';
+             cancelAnimationFrame(eAnimId);
+             startLoader();
+          }
+        });
+      });
     }
-
-    // ── Enter button click → user gesture → unlock audio ──
-    enterBtn.addEventListener('click', () => {
-      // 1. Pre-load audio now (user gesture context)
-      if (bgAudio) {
-        bgAudio.volume = 0.4;
-        bgAudio.load(); // prime it
-      }
-
-      // 2. Dismiss splash
-      splash.classList.add('hidden');
-      setTimeout(() => { splash.style.display = 'none'; }, 750);
-
-      // 3. Start the page loader
-      startLoader();
-    });
   }
+
 
   // ── The actual loader logic ──
   function startLoader() {

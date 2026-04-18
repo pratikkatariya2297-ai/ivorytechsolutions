@@ -25,7 +25,18 @@ html { }
 body {
   background-color: var(--bg); color: var(--text); font-family: var(--font);
   font-weight: 400; line-height: 1.5; overflow-x: hidden;
-  -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; cursor: none;
+  -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;  cursor: none;
+}
+.noise-overlay {
+  position: fixed; inset: 0; width: 100%; height: 100%;
+  background: url('https://grainy-gradients.vercel.app/noise.svg');
+  opacity: 0.05; pointer-events: none; z-index: 1000000;
+  mix-blend-mode: overlay;
+}
+.body-glow {
+  position: fixed; inset: 0; width: 100%; height: 100%;
+  background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(255,255,255,0.03) 0%, transparent 50%);
+  pointer-events: none; z-index: 999998;
 }
 body.loader-active { overflow: hidden; }
 a { text-decoration: none; color: inherit; cursor: none; }
@@ -61,6 +72,8 @@ button { font-family: var(--font); cursor: none; border: none; background: none;
     shineBrand 4s linear infinite;
   opacity: 0; transform: translateY(30px);
   filter: drop-shadow(0 0 15px rgba(255,255,255,0.15));
+  will-change: transform, filter;
+  transition: transform 0.1s ease-out; /* For smooth parallax */
 }
 @keyframes shineBrand {
   to { background-position: 200% center; }
@@ -77,25 +90,26 @@ button { font-family: var(--font); cursor: none; border: none; background: none;
 .enter-btn {
   display: inline-flex; align-items: center; gap: 12px;
   padding: 16px 36px;
-  background: transparent; border: 1px solid rgba(255,255,255,0.5);
+  background: transparent; border: 1px solid rgba(255,255,255,0.3);
   color: #fff; font-family: var(--font); font-size: 13px;
-  font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
+  font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase;
   cursor: pointer;
   position: relative; overflow: hidden;
   animation: loaderNameReveal 1s cubic-bezier(0.16,1,0.3,1) 0.5s forwards;
   opacity: 0; transform: translateY(20px);
-  transition: border-color 0.3s, box-shadow 0.3s;
+  transition: border-color 0.4s var(--ease-out), box-shadow 0.4s var(--ease-out), transform 0.1s ease-out;
+  backdrop-filter: blur(10px);
 }
 .enter-btn::before {
   content: ''; position: absolute; inset: 0;
   background: #fff; transform: scaleX(0); transform-origin: right;
-  transition: transform 0.45s cubic-bezier(0.16,1,0.3,1); z-index: 0;
+  transition: transform 0.6s cubic-bezier(0.16,1,0.3,1); z-index: 0;
 }
 .enter-btn:hover::before { transform: scaleX(1); transform-origin: left; }
-.enter-btn:hover { color: #000; border-color: #fff; box-shadow: 0 0 40px rgba(255,255,255,0.12); }
-.enter-btn-text, .enter-btn svg { position: relative; z-index: 1; }
-.enter-btn svg { transition: transform 0.3s ease; }
-.enter-btn:hover svg { transform: translateX(4px); }
+.enter-btn:hover { color: #000; border-color: #fff; box-shadow: 0 0 50px rgba(255,255,255,0.15); }
+.enter-btn-text, .enter-btn svg { position: relative; z-index: 1; pointer-events: none; }
+.enter-btn svg { transition: transform 0.4s var(--ease-smooth); }
+.enter-btn:hover svg { transform: translateX(6px); }
 .enter-hint {
   margin-top: 1.5rem; font-size: 12px; color: rgba(255,255,255,0.25);
   letter-spacing: 0.08em;
