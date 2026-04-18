@@ -540,7 +540,7 @@ h1,h2,h3,h4 { font-family: var(--font); font-weight: 900; text-transform: upperc
   position: absolute;
   top: 0; right: 0;
   width: 80px; height: 80px;
-  background-color: #000;
+  background-color: transparent;
   z-index: 20;
   /* By NOT having pointer-events: none, this block catches clicks and kills the link underneath */
 }
