@@ -277,9 +277,8 @@ document.addEventListener('DOMContentLoaded', () => {
           document.body.classList.remove('loader-active');
           cancelAnimationFrame(loaderAnimId);
 
-          // Always start at the top of the page on initial entry
+          // Skip forced scroll to top to prevent user losing their scroll position
           if (!sessionStorage.getItem('ivory_site_entered')) {
-             window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
              sessionStorage.setItem('ivory_site_entered', 'true');
           }
 
