@@ -75,6 +75,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (!loader) return;
 
+  // ── Session Bypass: Only show splash/loader once per session ──
+  if (sessionStorage.getItem('ivory_site_entered') === 'true') {
+     if (splash) splash.style.display = 'none';
+     loader.style.display = 'none';
+     document.body.classList.remove('loader-active');
+     if (soundBtn) soundBtn.classList.add('visible');
+     
+     // Trigger structural animations seamlessly
+     if (typeof window.startHeroReveal === 'function') {
+        setTimeout(window.startHeroReveal, 100);
+     }
+     
+     if (bgAudio && sessionStorage.getItem('ivory_audio_playing') === 'true') {
+         bgAudio.play().then(() => {
+             if (soundBtn) soundBtn.classList.add('playing');
+         }).catch(()=>{});
+     }
+     // Setup any scheduled popups 
+     if (typeof scheduleLeadPopup === 'function') scheduleLeadPopup();
+     
+     return;
+  }
+
   if (!splash || !enterBtn) {
     startLoader();
   } else {
