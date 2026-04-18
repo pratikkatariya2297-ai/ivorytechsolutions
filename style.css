@@ -535,6 +535,15 @@ h1,h2,h3,h4 { font-family: var(--font); font-weight: 900; text-transform: upperc
   z-index: 10;
   backdrop-filter: blur(10px);
 }
+/* Overlay to hide the Google Drive pop-out icon */
+.hero-video-container::after {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 55px; height: 50px;
+  background-color: #000;
+  pointer-events: none;
+}
 .hero-video-container iframe { width: 100%; height: 100%; border: none; }
 
 .hero-subtext-container { margin-top:4rem; max-width:440px; align-self:flex-end; opacity:0; transform:translateY(30px); }
