@@ -85,6 +85,9 @@ export function dbListenSessions(callback) {
     const sessions = [];
     snapshot.forEach(doc => sessions.push({ id: doc.id, ...doc.data() }));
     callback(sessions);
+  }, (err) => {
+    console.error('Firestore Sessions Listen Error:', err);
+    callback([]); // Return empty list as fallback
   });
 }
 
@@ -97,6 +100,9 @@ export function dbListenLeads(callback) {
     const leads = [];
     snapshot.forEach(doc => leads.push({ id: doc.id, ...doc.data() }));
     callback(leads);
+  }, (err) => {
+    console.error('Firestore Leads Listen Error:', err);
+    callback([]);
   });
 }
 
@@ -109,6 +115,9 @@ export function dbListenActivities(callback) {
     const activities = [];
     snapshot.forEach(doc => activities.push({ id: doc.id, ...doc.data() }));
     callback(activities);
+  }, (err) => {
+    console.error('Firestore Activities Listen Error:', err);
+    callback([]);
   });
 }
 
@@ -138,5 +147,8 @@ export function dbListenSettings(type, callback) {
     } else {
       callback(null);
     }
+  }, (err) => {
+    console.error(`Firestore Settings Listen Error (${type}):`, err);
+    callback(null);
   });
 }

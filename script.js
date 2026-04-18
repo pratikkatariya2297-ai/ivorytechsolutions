@@ -66,6 +66,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const bgAudio   = document.getElementById('bg-audio');
   const brand     = document.querySelector('.enter-brand');
   const brandSub  = document.querySelector('.enter-brand-sub');
+  
+  // Loader Variables
+  const tagline   = document.getElementById('loader-tagline');
+  const bar       = document.getElementById('loader-progress-bar');
+  const pct       = document.getElementById('loader-percentage');
+  const soundBtn  = document.getElementById('sound-toggle');
 
   if (!loader) return;
 
@@ -335,9 +341,9 @@ document.addEventListener('DOMContentLoaded', () => {
           if (soundBtn) soundBtn.classList.add('visible');
 
           // Trigger the cinematic hero reveal animation
-          startHeroReveal();
+          if (typeof startHeroReveal === 'function') startHeroReveal();
 
-          schedulLeadPopup();
+          scheduleLeadPopup();
         }, 300);
       }
     }
@@ -349,7 +355,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // ═══════════════════════════════════════════════════════
 //  LEAD CATCHER POPUP (10s after page load)
 // ═══════════════════════════════════════════════════════
-function schedulLeadPopup() {
+function scheduleLeadPopup() {
   if (sessionStorage.getItem('ivory_popup_shown')) return;
   setTimeout(() => {
     const overlay = document.getElementById('lead-popup-overlay');
@@ -920,18 +926,8 @@ function initCartEvents() {
   });
 }
 
-// ═══════════════════════════════════════════════════════
-//  TYPING ANIMATION
-// ═══════════════════════════════════════════════════════
-const typingWords = ['MARKETING & DESIGN','WEB DEVELOPMENT','APP DESIGNING','BRAND STRATEGY','SOCIAL MEDIA','UI/UX DESIGN','DIGITAL ADS','CONTENT CREATION'];
-const typingTextEl = document.getElementById('typing-text');
-let wordIndex=0, charIndex=0, isDeleting=false, typingSpeed=100;
-function typeEffect() {
-  const w=typingWords[wordIndex];
-  if(!isDeleting){typingTextEl.textContent=w.substring(0,charIndex+1);charIndex++;typingSpeed=80+Math.random()*60;if(charIndex===w.length){typingSpeed=2000;isDeleting=true;}}
-  else{typingTextEl.textContent=w.substring(0,charIndex-1);charIndex--;typingSpeed=40;if(charIndex===0){isDeleting=false;wordIndex=(wordIndex+1)%typingWords.length;typingSpeed=500;}}
-  setTimeout(typeEffect,typingSpeed);
-}
+// Consolidated words for typing effect
+const typingWords = ["Digital Marketing Strategies", "High-Conversion Websites", "AI-Powered Growth Engines", "Premium Brand Experiences", "Data-Driven Results"];
 
 // ═══════════════════════════════════════════════════════
 //  DOM CONTENT LOADED  
@@ -982,57 +978,56 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ── START HERO REVEAL (Called when loader finishes) ──
   window.startHeroReveal = function() {
-    const heroTimeline = gsap.timeline({ delay: 0.2 });
-    const charWrap = document.querySelector('.char-wrap');
+    console.log('🎬 Starting Consolidated Hero Reveal...');
+    const tl = gsap.timeline({ delay: 0.2 });
     
-    if (charWrap) {
-      const text = charWrap.getAttribute('data-text');
+    // 1. Prepare/Build Heading chars
+    const charWrap = document.querySelector('.char-wrap');
+    if (charWrap && !charWrap.classList.contains('chars-built')) {
+      const text = charWrap.getAttribute('data-text') || "WE CREATE";
       charWrap.textContent = '';
       [...text].forEach(char => {
         const span = document.createElement('span');
         span.textContent = char === ' ' ? '\u00A0' : char;
-        span.style.display = 'inline-block'; 
-        span.style.opacity = '0';
-        span.style.transform = 'translateY(100%) rotateX(-90deg)';
         span.className = 'hero-char';
         charWrap.appendChild(span);
       });
-      charWrap.style.opacity = '1'; 
-      charWrap.style.transform = 'none';
+      charWrap.classList.add('chars-built');
       
-      // 1. Heading chars reveal
-      heroTimeline.to('.hero-char', { 
-        y: 0, 
-        rotateX: 0, 
-        opacity: 1, 
-        duration: 0.8, 
-        stagger: 0.04, 
-        ease: 'power4.out' 
-      });
+      // Ensure specific initial styles for GSAP to handle
+      gsap.set('.hero-char', { display: 'inline-block', opacity: 0, y: '100%', rotateX: -90 });
+      gsap.set(charWrap, { opacity: 1, transform: 'none' });
     }
 
-    // 2. Video Container reveal
-    if (document.querySelector('.hero-video-container')) {
-      heroTimeline.to('.hero-video-container', {
-        opacity: 1,
-        y: 0,
-        duration: 1.2,
-        ease: 'power3.out'
-      }, '-=0.6');
-    }
+    // 2. Prepare other elements
+    gsap.set(['.hero-video-container', '.hero-subtext-container', '.hero-ai-badge'], { opacity: 0, y: 30 });
 
-    // 3. Subtext reveal
-    if (document.querySelector('.hero-subtext-container')) {
-      heroTimeline.to('.hero-subtext-container', { 
-        y: 0, 
-        opacity: 1, 
-        duration: 1.2, 
-        ease: 'power4.out' 
-      }, '-=0.8');
-    }
-
-    // 4. Start typing effect after heading is partially revealed
-    heroTimeline.call(() => { typeEffect(); }, null, '+=0.2');
+    // 3. Animation Timeline
+    tl.to('.hero-char', { 
+      y: 0, rotateX: 0, opacity: 1, 
+      duration: 0.8, stagger: 0.04, ease: 'power4.out' 
+    })
+    .to('.hero-ai-badge', { opacity: 1, y: 0, duration: 1, ease: 'power3.out', 
+      onStart: () => {
+        const num = document.querySelector('.ai-ring-number');
+        if (num) {
+          let count = 0, target = parseInt(num.dataset.target || 99);
+          const interval = setInterval(() => {
+            count++; num.textContent = count;
+            if (count >= target) clearInterval(interval);
+          }, 20);
+        }
+        const ring = document.querySelector('.ai-ring-progress');
+        if (ring) ring.style.strokeDashoffset = (2 * Math.PI * 54) * (1 - 0.99);
+      }
+    }, '-=0.4')
+    .to('.hero-video-container', { opacity: 1, y: 0, duration: 1.2, ease: 'power3.out' }, '-=0.6')
+    .to('.hero-subtext-container', { opacity: 1, y: 0, duration: 1.2, ease: 'power4.out' }, '-=0.8')
+    .add(() => {
+      startTyping(); // Starts the unified typing effect
+      const nav = document.getElementById('navbar');
+      if (nav) nav.classList.add('nav-visible');
+    }, '-=0.6');
   };
 
 
@@ -1383,7 +1378,7 @@ document.addEventListener('DOMContentLoaded', () => {
       logActivity('click', {
         tag: target.tagName,
         text: (target.textContent || '').substring(0, 50).trim(),
-        href: target.href || null,
+        href: target.href || target.getAttribute('href') || null,
         class: target.className.substring(0, 60)
       });
 
@@ -1565,3 +1560,33 @@ function applyFounderSettings(data) {
 }
 document.addEventListener('DOMContentLoaded', loadFounderSocials);
 document.addEventListener('DOMContentLoaded', loadEmployeeSocials);
+
+/**
+ * Unified Hero Typing Text Effect
+ */
+function startTyping() {
+  const textEl = document.getElementById('typing-text');
+  if (!textEl) return;
+  
+  let wordIndex = 0, charIndex = 0, isDeleting = false, typeSpeed = 100;
+
+  function type() {
+    const currentWord = typingWords[wordIndex];
+    if (isDeleting) {
+      textEl.textContent = currentWord.substring(0, charIndex - 1);
+      charIndex--; typeSpeed = 50;
+    } else {
+      textEl.textContent = currentWord.substring(0, charIndex + 1);
+      charIndex++; typeSpeed = 100;
+    }
+
+    if (!isDeleting && charIndex === currentWord.length) {
+      isDeleting = true; typeSpeed = 2000;
+    } else if (isDeleting && charIndex === 0) {
+      isDeleting = false; wordIndex = (wordIndex + 1) % typingWords.length;
+      typeSpeed = 500;
+    }
+    setTimeout(type, typeSpeed);
+  }
+  type();
+}
