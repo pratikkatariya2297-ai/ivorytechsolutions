@@ -1389,6 +1389,42 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 // Apply Founder Social Links dynamically (Real-time Cloud Sync)
+
+// ── EMPLOYEES DYNAMIC LOAD ───────────────────────────
+function loadEmployeeSocials() {
+    const data = JSON.parse(localStorage.getItem('ivory_employee_socials') || '{}');
+    applyEmployeeSettings(data);
+
+    if (typeof dbListenSettings === 'function') {
+        dbListenSettings('employees', (cloudData) => {
+            if (cloudData) {
+                console.log('🔗 Syncing Employee Profiles...');
+                localStorage.setItem('ivory_employee_socials', JSON.stringify(cloudData));
+                applyEmployeeSettings(cloudData);
+            }
+        });
+    }
+}
+
+function applyEmployeeSettings(data) {
+    if (!data) return;
+    const emps = ['priyanka', 'palak', 'vishal'];
+    emps.forEach(p => {
+        if (data['photo_' + p]) {
+            const imgEl = document.getElementById('employee-img-' + p);
+            if (imgEl) imgEl.src = data['photo_' + p];
+        }
+        if (data['role_' + p]) {
+            const roleEl = document.getElementById('employee-role-' + p);
+            if (roleEl) roleEl.innerText = data['role_' + p];
+        }
+        if (data['bio_' + p]) {
+            const bioEl = document.getElementById('employee-bio-' + p);
+            if (bioEl) bioEl.innerText = data['bio_' + p];
+        }
+    });
+}
+
 function loadFounderSocials() {
     const socials = JSON.parse(localStorage.getItem('ivory_founder_socials') || '{}');
     applyFounderSettings(socials);
@@ -1460,3 +1496,4 @@ function applyFounderSettings(data) {
     });
 }
 document.addEventListener('DOMContentLoaded', loadFounderSocials);
+document.addEventListener('DOMContentLoaded', loadEmployeeSocials);

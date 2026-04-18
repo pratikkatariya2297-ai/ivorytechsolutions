@@ -658,6 +658,29 @@ function loadSettings() {
     applySettingsToUI(localSocials);
 
     // 2. Real-time Sync from Firebase (Source of Truth)
+    dbListenSettings('employees', (data) => {
+        if (data) {
+            console.log('☁️ Employee Profiles Sync:', data);
+            localStorage.setItem('ivory_employee_socials', JSON.stringify(data));
+            const emps = ['priyanka', 'palak', 'vishal'];
+            emps.forEach(p => {
+                if (data['photo_' + p]) {
+                    const preview = document.getElementById(`employee-photo-${p}-preview`);
+                    const hidden = document.getElementById(`employee-photo-${p}-data`);
+                    if (preview && hidden) {
+                        preview.innerHTML = `<img src="${data['photo_' + p]}" style="max-width:100px; max-height:100px; border-radius:8px;">`;
+                        hidden.value = data['photo_' + p];
+                    }
+                }
+                const roleEl = document.getElementById(`employee-role-${p}`);
+                if (roleEl && data['role_' + p]) roleEl.value = data['role_' + p];
+                
+                const bioEl = document.getElementById(`employee-bio-${p}`);
+                if (bioEl && data['bio_' + p]) bioEl.value = data['bio_' + p];
+            });
+        }
+    });
+
     dbListenSettings('founders', (data) => {
         if (data) {
             console.log('☁️ Founder Profiles Sync:', data);
@@ -741,6 +764,22 @@ function initSettings() {
             });
 
             // Save to Cloud & Local
+            
+        const empSettings = {};
+        const emps = ['priyanka', 'palak', 'vishal'];
+        emps.forEach(p => {
+            const roleEl = document.getElementById(`employee-role-${p}`);
+            if (roleEl) empSettings['role_' + p] = roleEl.value;
+            
+            const bioEl = document.getElementById(`employee-bio-${p}`);
+            if (bioEl) empSettings['bio_' + p] = bioEl.value;
+            
+            const photoEl = document.getElementById(`employee-photo-${p}-data`);
+            if (photoEl && photoEl.value) empSettings['photo_' + p] = photoEl.value;
+        });
+        await dbSaveSettings('employees', empSettings);
+        localStorage.setItem('ivory_employee_socials', JSON.stringify(empSettings));
+
             await dbSaveSettings('founders', settings);
             localStorage.setItem('ivory_founder_socials', JSON.stringify(settings));
             
