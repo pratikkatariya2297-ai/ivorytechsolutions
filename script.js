@@ -279,7 +279,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
           // Force scroll to top when loader finishes
           window.scrollTo(0, 0);
-          if (typeof lenis !== 'undefined') lenis.scrollTo(0, { immediate: true });
+          if (typeof lenis !== 'undefined') {
+            lenis.scrollTo(0, { immediate: true });
+          }
+          
+          // CRITICAL: Refresh ScrollTrigger after a slight delay to ensure all animation 
+          // markers are correctly calculated from the 'top' position.
+          setTimeout(() => {
+            if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh();
+          }, 100);
 
           if (!sessionStorage.getItem('ivory_site_entered')) {
              sessionStorage.setItem('ivory_site_entered', 'true');
