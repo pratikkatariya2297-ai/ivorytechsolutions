@@ -5,6 +5,84 @@
 
 import { dbSaveSession, dbLogActivity, dbSaveLead, dbListenSettings } from './firebase-service.js';
 
+// ── GLOBAL CONSTANTS ──
+const typingWords = ["Digital Marketing Strategies", "High-Conversion Websites", "AI-Powered Growth Engines", "Premium Brand Experiences", "Data-Driven Results"];
+
+// ── HERO TYPING EFFECT ──
+function startTyping() {
+  const textEl = document.getElementById('typing-text');
+  if (!textEl) return;
+  
+  let wordIndex = 0, charIndex = 0, isDeleting = false, typeSpeed = 100;
+
+  function type() {
+    const currentWord = typingWords[wordIndex];
+    if (isDeleting) {
+      textEl.textContent = currentWord.substring(0, charIndex - 1);
+      charIndex--; typeSpeed = 50;
+    } else {
+      textEl.textContent = currentWord.substring(0, charIndex + 1);
+      charIndex++; typeSpeed = 100;
+    }
+
+    if (!isDeleting && charIndex === currentWord.length) {
+      isDeleting = true; typeSpeed = 2000;
+    } else if (isDeleting && charIndex === 0) {
+      isDeleting = false; wordIndex = (wordIndex + 1) % typingWords.length;
+      typeSpeed = 500;
+    }
+    setTimeout(type, typeSpeed);
+  }
+  type();
+}
+
+// ── HERO REVEAL ANIMATION ──
+window.startHeroReveal = function() {
+  console.log('🎬 Starting Consolidated Hero Reveal...');
+  const tl = gsap.timeline({ delay: 0.2 });
+  
+  const charWrap = document.querySelector('.char-wrap');
+  if (charWrap && !charWrap.classList.contains('chars-built')) {
+    const text = charWrap.getAttribute('data-text') || "WE CREATE";
+    charWrap.textContent = '';
+    [...text].forEach(char => {
+      const span = document.createElement('span');
+      span.textContent = char === ' ' ? '\u00A0' : char;
+      span.className = 'hero-char';
+      charWrap.appendChild(span);
+    });
+    charWrap.classList.add('chars-built');
+    gsap.set('.hero-char', { display: 'inline-block', opacity: 0, y: '100%', rotateX: -90 });
+    gsap.set(charWrap, { opacity: 1, transform: 'none' });
+  }
+
+  gsap.set(['.hero-video-container', '.hero-subtext-container', '.hero-ai-badge'], { opacity: 0, y: 30 });
+
+  tl.to('.hero-char', { y: 0, rotateX: 0, opacity: 1, duration: 0.8, stagger: 0.04, ease: 'power4.out' })
+    .to('.hero-ai-badge', { 
+      opacity: 1, y: 0, duration: 1, ease: 'power3.out',
+      onStart: () => {
+        const num = document.querySelector('.ai-ring-number');
+        if (num) {
+          let count = 0, target = parseInt(num.dataset.target || 99);
+          const interval = setInterval(() => {
+            count++; num.textContent = count;
+            if (count >= target) clearInterval(interval);
+          }, 20);
+        }
+        const ring = document.querySelector('.ai-ring-progress');
+        if (ring) ring.style.strokeDashoffset = (2 * Math.PI * 54) * (1 - 0.99);
+      }
+    }, '-=0.4')
+    .to('.hero-video-container', { opacity: 1, y: 0, duration: 1.2, ease: 'power3.out' }, '-=0.6')
+    .to('.hero-subtext-container', { opacity: 1, y: 0, duration: 1.2, ease: 'power4.out' }, '-=0.8')
+    .add(() => {
+      startTyping();
+      const nav = document.getElementById('navbar');
+      if (nav) nav.classList.add('nav-visible');
+    }, '-=0.6');
+};
+
 
 // ═══════════════════════════════════════════════════════
 //  CUSTOM CURSOR INJECTION
@@ -82,10 +160,17 @@ document.addEventListener('DOMContentLoaded', () => {
      document.body.classList.remove('loader-active');
      if (soundBtn) soundBtn.classList.add('visible');
      
-     // Trigger structural animations seamlessly
-     if (typeof window.startHeroReveal === 'function') {
-        setTimeout(window.startHeroReveal, 100);
-     }
+     // Trigger structural animations seamlessly with retry logic to handle race conditions
+     const triggerReveal = () => {
+        if (typeof window.startHeroReveal === 'function') {
+           console.log('✅ Bypass: startHeroReveal identified. Triggering...');
+           window.startHeroReveal();
+        } else {
+           console.log('⏳ Bypass: window.startHeroReveal not ready yet. Retrying...');
+           setTimeout(triggerReveal, 100);
+        }
+     };
+     triggerReveal();
      
      if (bgAudio && sessionStorage.getItem('ivory_audio_playing') === 'true') {
          bgAudio.play().then(() => {
@@ -949,8 +1034,6 @@ function initCartEvents() {
   });
 }
 
-// Consolidated words for typing effect
-const typingWords = ["Digital Marketing Strategies", "High-Conversion Websites", "AI-Powered Growth Engines", "Premium Brand Experiences", "Data-Driven Results"];
 
 // ═══════════════════════════════════════════════════════
 //  DOM CONTENT LOADED  
@@ -1000,58 +1083,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   // ── START HERO REVEAL (Called when loader finishes) ──
-  window.startHeroReveal = function() {
-    console.log('🎬 Starting Consolidated Hero Reveal...');
-    const tl = gsap.timeline({ delay: 0.2 });
-    
-    // 1. Prepare/Build Heading chars
-    const charWrap = document.querySelector('.char-wrap');
-    if (charWrap && !charWrap.classList.contains('chars-built')) {
-      const text = charWrap.getAttribute('data-text') || "WE CREATE";
-      charWrap.textContent = '';
-      [...text].forEach(char => {
-        const span = document.createElement('span');
-        span.textContent = char === ' ' ? '\u00A0' : char;
-        span.className = 'hero-char';
-        charWrap.appendChild(span);
-      });
-      charWrap.classList.add('chars-built');
-      
-      // Ensure specific initial styles for GSAP to handle
-      gsap.set('.hero-char', { display: 'inline-block', opacity: 0, y: '100%', rotateX: -90 });
-      gsap.set(charWrap, { opacity: 1, transform: 'none' });
-    }
-
-    // 2. Prepare other elements
-    gsap.set(['.hero-video-container', '.hero-subtext-container', '.hero-ai-badge'], { opacity: 0, y: 30 });
-
-    // 3. Animation Timeline
-    tl.to('.hero-char', { 
-      y: 0, rotateX: 0, opacity: 1, 
-      duration: 0.8, stagger: 0.04, ease: 'power4.out' 
-    })
-    .to('.hero-ai-badge', { opacity: 1, y: 0, duration: 1, ease: 'power3.out', 
-      onStart: () => {
-        const num = document.querySelector('.ai-ring-number');
-        if (num) {
-          let count = 0, target = parseInt(num.dataset.target || 99);
-          const interval = setInterval(() => {
-            count++; num.textContent = count;
-            if (count >= target) clearInterval(interval);
-          }, 20);
-        }
-        const ring = document.querySelector('.ai-ring-progress');
-        if (ring) ring.style.strokeDashoffset = (2 * Math.PI * 54) * (1 - 0.99);
-      }
-    }, '-=0.4')
-    .to('.hero-video-container', { opacity: 1, y: 0, duration: 1.2, ease: 'power3.out' }, '-=0.6')
-    .to('.hero-subtext-container', { opacity: 1, y: 0, duration: 1.2, ease: 'power4.out' }, '-=0.8')
-    .add(() => {
-      startTyping(); // Starts the unified typing effect
-      const nav = document.getElementById('navbar');
-      if (nav) nav.classList.add('nav-visible');
-    }, '-=0.6');
-  };
 
 
   // ── AI ACCURACY RING ANIMATION ──
@@ -1587,29 +1618,3 @@ document.addEventListener('DOMContentLoaded', loadEmployeeSocials);
 /**
  * Unified Hero Typing Text Effect
  */
-function startTyping() {
-  const textEl = document.getElementById('typing-text');
-  if (!textEl) return;
-  
-  let wordIndex = 0, charIndex = 0, isDeleting = false, typeSpeed = 100;
-
-  function type() {
-    const currentWord = typingWords[wordIndex];
-    if (isDeleting) {
-      textEl.textContent = currentWord.substring(0, charIndex - 1);
-      charIndex--; typeSpeed = 50;
-    } else {
-      textEl.textContent = currentWord.substring(0, charIndex + 1);
-      charIndex++; typeSpeed = 100;
-    }
-
-    if (!isDeleting && charIndex === currentWord.length) {
-      isDeleting = true; typeSpeed = 2000;
-    } else if (isDeleting && charIndex === 0) {
-      isDeleting = false; wordIndex = (wordIndex + 1) % typingWords.length;
-      typeSpeed = 500;
-    }
-    setTimeout(type, typeSpeed);
-  }
-  type();
-}
